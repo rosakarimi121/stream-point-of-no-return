@@ -1,1 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#08090b">
+  <title>STREAM — Point of No Return</title>
 
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 50% 20%, rgba(87,255,177,.10), transparent 32%),
+        #08090b;
+      color: #f5f7f7;
+      font-family: Inter, Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .game {
+      width: 100%;
+      max-width: 760px;
+      text-align: center;
+    }
+
+    .brand {
+      color: #77ffbd;
+      font-size: 13px;
+      letter-spacing: 3px;
+      font-weight: 700;
+      margin-bottom: 32px;
+    }
+
+    .step {
+      color: #8d949b;
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      font-size: clamp(38px, 8vw, 74px);
+      line-height: .95;
+      letter-spacing: -3px;
+      margin-bottom: 20px;
+    }
+
+    .subtitle {
+      color: #aeb4b9;
+      font-size: 17px;
+      line-height: 1.6;
+      max-width: 560px;
+      margin: 0 auto 42px;
+    }
+
+    .supply-box {
+      border: 1px solid #292d31;
+      background: rgba(255,255,255,.025);
+      border-radius: 22px;
+      padding: 30px 20px;
+      margin-bottom: 24px;
+    }
+
+    .label {
+      color: #858c92;
+      font-size: 12px;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+    }
+
+    #supply {
+      font-size: clamp(38px, 9vw, 72px);
+      font-weight: 800;
+      letter-spacing: -3px;
+    }
+
+    .ticker {
+      color: #77ffbd;
+      font-size: 14px;
+      margin-top: 8px;
+      letter-spacing: 2px;
+    }
+
+    button {
+      width: 100%;
+      border: 0;
+      border-radius: 16px;
+      padding: 19px 22px;
+      background: #77ffbd;
+      color: #07110c;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: .2s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.05);
+    }
+
+    button:disabled {
+      cursor: default;
+      transform: none;
+    }
+
+    .burning {
+      background: #ff654f;
+      color: white;
+    }
+
+    .progress {
+      height: 5px;
+      background: #202326;
+      border-radius: 20px;
+      margin: 28px 0 16px;
+      overflow: hidden;
+    }
+
+    #progressBar {
+      height: 100%;
+      width: 0;
+      background: #77ffbd;
+      transition: width 1.8s ease;
+    }
+
+    #status {
+      min-height: 24px;
+      color: #8f969b;
+      font-size: 13px;
+    }
+
+    .reveal {
+      display: none;
+      animation: appear .7s ease forwards;
+    }
+
+    .question {
+      font-size: clamp(27px, 6vw, 44px);
+      line-height: 1.1;
+      margin-bottom: 30px;
+    }
+
+    .answers {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .answer {
+      background: transparent;
+      color: white;
+      border: 1px solid #33383d;
+    }
+
+    .answer:hover {
+      border-color: #77ffbd;
+      background: rgba(119,255,189,.06);
+    }
+
+    .result {
+      display: none;
+    }
+
+    .zero {
+      font-size: clamp(100px, 28vw, 210px);
+      line-height: .8;
+      color: #77ffbd;
+      font-weight: 900;
+      letter-spacing: -12px;
+      margin: 25px 0;
+    }
+
+    .facts {
+      margin: 34px 0;
+      display: grid;
+      gap: 10px;
+      text-align: left;
+    }
+
+    .fact {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      border-bottom: 1px solid #24282b;
+      padding: 14px 4px;
+      color: #a9afb4;
+    }
+
+    .fact strong {
+      color: white;
+      text-align: right;
+    }
+
+    .verify {
+      display: inline-block;
+      margin-top: 8px;
+      color: #77ffbd;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    @keyframes appear {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media(max-width: 520px) {
+      body { padding: 20px; }
+      .answers { grid-template-columns: 1fr; }
+      .supply-box { padding: 26px 14px; }
+      h1 { letter-spacing: -2px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="game">
+
+    <div class="brand">$STREAM · POINT OF NO RETURN</div>
+
+    <section id="stage1">
+      <div class="step">01 / THE SUPPLY</div>
+
+      <h1>1 billion<br>STREAM existed.</h1>
+
+      <p class="subtitle">
+        Then the Streamflow Foundation made a decision
+        that could not be reversed.
+      </p>
+
+      <div class="supply-box">
+        <div class="label">TOTAL SUPPLY</div>
+        <div id="supply">1,000,000,000</div>
+        <div class="ticker">$STREAM</div>
+
+        <div class="progress">
+          <div id="progressBar"></div>
+        </div>
+
+        <div id="status">Ready for an irreversible action.</div>
+      </div>
+
+      <button id="burnButton" onclick="burnSupply()">
+        BURN 70% OF THE SUPPLY
+      </button>
+    </section>
+
+
+    <section id="stage2" class="reveal">
+      <div class="step">02 / POINT OF NO RETURN</div>
+
+      <h2 class="question">
+        700M STREAM is gone.<br><br>
+        Can the Foundation mint it back?
+      </h2>
+
+      <div class="answers">
+        <button class="answer" onclick="wrongAnswer()">YES</button>
+        <button class="answer" onclick="correctAnswer()">NO</button>
+      </div>
+
+      <p id="answerMessage" class="subtitle" style="margin-top:25px;"></p>
+    </section>
+
+
+    <section id="stage3" class="result">
+
+      <div class="step">03 / THE NUMBER THAT MATTERS</div>
+
+      <p class="subtitle" style="margin-bottom:10px;">
+        The important number isn't 70%.
+      </p>
+
+      <div class="zero">0</div>
+
+      <h2 class="question">
+        STREAM left in the Foundation treasury.
+      </h2>
+
+      <p class="subtitle">
+        This wasn't just a supply reduction.
+        It removed a future decision from the supply schedule.
+      </p>
+
+      <div class="facts">
+        <div class="fact">
+          <span>Original supply</span>
+          <strong>1,000,000,000</strong>
+        </div>
+
+        <div class="fact">
+          <span>Permanently burned</span>
+          <strong>699.99M STREAM</strong>
+        </div>
+
+        <div class="fact">
+          <span>New supply</span>
+          <strong>300M STREAM</strong>
+        </div>
+
+        <div class="fact">
+          <span>Foundation treasury</span>
+          <strong>0 STREAM</strong>
+        </div>
+
+        <div class="fact">
+          <span>Mint authority</span>
+          <strong>None</strong>
+        </div>
+      </div>
+
+      <p class="subtitle" style="margin-bottom:12px;">
+        Don't trust this page.
+      </p>
+
+      <a
+        class="verify"
+        href="https://solscan.io/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        VERIFY IT ON-CHAIN ↗
+      </a>
+
+    </section>
+
+  </main>
+
+
+  <script>
+    function burnSupply() {
+      const button = document.getElementById("burnButton");
+      const supply = document.getElementById("supply");
+      const status = document.getElementById("status");
+      const bar = document.getElementById("progressBar");
+
+      button.disabled = true;
+      button.classList.add("burning");
+      button.textContent = "BURNING...";
+      status.textContent = "Removing 699.99M STREAM permanently...";
+      bar.style.width = "70%";
+
+      const start = 1000000000;
+      const end = 300000000;
+      const duration = 1800;
+      const startTime = performance.now();
+
+      function animate(now) {
+        const progress = Math.min((now - startTime) / duration, 1);
+        const current = Math.round(start - ((start - end) * progress));
+
+        supply.textContent = current.toLocaleString();
+
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          supply.textContent = "300,000,000";
+          status.textContent = "Supply reduced. This action cannot be reversed.";
+          button.textContent = "699.99M STREAM BURNED";
+
+          setTimeout(() => {
+            document.getElementById("stage1").style.display = "none";
+            document.getElementById("stage2").style.display = "block";
+          }, 1000);
+        }
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+
+    function wrongAnswer() {
+      document.getElementById("answerMessage").innerHTML =
+        "Not this time. The mint authority is gone.<br>The burned supply cannot simply be issued again.";
+    }
+
+
+    function correctAnswer() {
+      const message = document.getElementById("answerMessage");
+
+      message.innerHTML =
+        "Correct. <strong style='color:#77ffbd'>No mint authority. No undo button.</strong>";
+
+      setTimeout(() => {
+        document.getElementById("stage2").style.display = "none";
+        document.getElementById("stage3").style.display = "block";
+      }, 1100);
+    }
+  </script>
+
+</body>
+</html>
