@@ -1,154 +1,714 @@
-from pathlib import Path
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#050807">
+<title>$STREAM — Burn Challenge</title>
 
-src = Path("/mnt/data/current_index.txt")
-html = src.read_text(encoding="utf-8")
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
 
-# 1) Add professional feedback/proof styles before .number-grid
-marker = ".number-grid{\n"
-styles = r'''
-.choice-feedback{
+:root{
+  --bg:#050807;
+  --panel:#09100d;
+  --line:#24332c;
+  --green:#66f7b8;
+  --text:#f4f7f5;
+  --muted:#a9b9b1;
+  --danger:#ff6b6b;
+}
+
+html{scroll-behavior:smooth;}
+
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 50% 15%,rgba(102,247,184,.08),transparent 28%),
+    var(--bg);
+  color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+  overflow-x:hidden;
+}
+
+button{font:inherit;}
+
+.screen{
   display:none;
-  margin-top:18px;
-  border:1px solid rgba(255,107,107,.45);
-  background:rgba(255,107,107,.06);
-  border-radius:18px;
-  padding:18px 20px;
-  text-align:left;
+  min-height:100vh;
+  width:100%;
+  padding:42px 24px;
+  align-items:center;
+  justify-content:center;
 }
 
-.choice-feedback.show{
-  display:block;
-  animation:feedbackIn .22s ease;
+.screen.active{
+  display:flex;
+  animation:screenIn .38s ease;
 }
 
-.choice-feedback.success{
-  border-color:rgba(102,247,184,.45);
-  background:rgba(102,247,184,.06);
-}
-
-.choice-feedback-title{
-  font-size:15px;
-  font-weight:950;
-  letter-spacing:1.5px;
-  color:var(--danger);
-  margin-bottom:7px;
-}
-
-.choice-feedback.success .choice-feedback-title{
-  color:var(--green);
-}
-
-.choice-feedback-copy{
-  color:#d4ded9;
-  line-height:1.55;
-  font-size:15px;
-}
-
-.choice-feedback-hint{
-  display:block;
-  margin-top:8px;
-  color:var(--muted);
-  font-size:13px;
-  font-weight:800;
-  letter-spacing:.5px;
-}
-
-@keyframes feedbackIn{
-  from{opacity:0;transform:translateY(-5px)}
+@keyframes screenIn{
+  from{opacity:0;transform:translateY(10px)}
   to{opacity:1;transform:translateY(0)}
 }
 
-.proof-panel{
-  margin:28px auto 0;
-  max-width:760px;
-  border:1px solid rgba(102,247,184,.34);
-  background:
-    radial-gradient(circle at top right, rgba(102,247,184,.10), transparent 38%),
-    rgba(9,16,13,.78);
-  border-radius:24px;
-  padding:24px;
-  text-align:left;
+.wrap{
+  width:min(980px,100%);
+  margin:auto;
 }
 
-.proof-kicker{
+.brand{
   color:var(--green);
+  text-transform:uppercase;
+  letter-spacing:5px;
+  font-size:13px;
+  font-weight:900;
+  margin-bottom:28px;
+}
+
+.eyebrow{
+  color:var(--green);
+  text-transform:uppercase;
+  letter-spacing:3px;
+  font-size:13px;
+  font-weight:900;
+  margin-bottom:18px;
+}
+
+h1{
+  font-size:clamp(48px,8vw,94px);
+  line-height:.93;
+  letter-spacing:-4px;
+  max-width:950px;
+}
+
+h2{
+  font-size:clamp(38px,6vw,68px);
+  line-height:1;
+  letter-spacing:-2px;
+}
+
+.accent{color:var(--green);}
+
+.lead{
+  margin-top:28px;
+  max-width:790px;
+  font-size:clamp(19px,2.3vw,27px);
+  line-height:1.55;
+  color:#c4d1cb;
+}
+
+.panel{
+  margin-top:42px;
+  padding:32px;
+  border:1px solid var(--line);
+  border-radius:28px;
+  background:rgba(9,16,13,.82);
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  margin-bottom:22px;
+}
+
+.stat{
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:20px;
+  text-align:center;
+}
+
+.stat strong{
+  display:block;
+  font-size:26px;
+  margin-bottom:6px;
+}
+
+.stat span{
+  color:var(--muted);
   font-size:12px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+
+.primary{
+  width:100%;
+  border:0;
+  border-radius:18px;
+  padding:22px 26px;
+  background:var(--green);
+  color:#02110b;
   font-weight:950;
-  letter-spacing:2px;
+  font-size:18px;
+  letter-spacing:.5px;
+  cursor:pointer;
+  transition:.18s ease;
+}
+
+.primary:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 35px rgba(102,247,184,.15);
+}
+
+.topbar{
+  position:fixed;
+  z-index:20;
+  left:0;
+  right:0;
+  top:0;
+  padding:15px 24px;
+  display:none;
+  justify-content:center;
+  pointer-events:none;
+}
+
+.topbar.show{display:flex;}
+
+.topbar-inner{
+  width:min(980px,100%);
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+.progress{
+  flex:1;
+  height:4px;
+  background:#15231d;
+  overflow:hidden;
+}
+
+.progress-fill{
+  width:0%;
+  height:100%;
+  background:var(--green);
+  transition:.4s ease;
+}
+
+.hud{
+  white-space:nowrap;
+  color:var(--green);
+  font-weight:900;
+  font-size:13px;
+}
+
+.mission{padding-top:80px;}
+
+.mission-copy{
+  margin-top:20px;
+  color:#c2d0c9;
+  font-size:20px;
+  line-height:1.55;
+}
+
+.supply-box{
+  margin-top:35px;
+  border:1px solid var(--line);
+  border-radius:26px;
+  padding:32px;
+  background:rgba(9,16,13,.82);
+}
+
+.supply-row{
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  align-items:flex-start;
+}
+
+.label{
+  color:#a9c1b6;
+  font-size:13px;
+  text-transform:uppercase;
+  letter-spacing:1px;
   margin-bottom:9px;
 }
 
-.proof-title{
-  font-size:clamp(22px,4vw,32px);
+.big-number{
+  font-size:clamp(28px,5vw,52px);
   font-weight:950;
-  margin-bottom:10px;
 }
 
-.proof-copy{
-  color:var(--muted);
-  line-height:1.65;
-  font-size:15px;
+.burn-display{
+  text-align:center;
+  padding:35px 0 24px;
 }
 
-.proof-chain{
-  margin-top:16px;
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-}
-
-.proof-chip{
-  border:1px solid var(--line);
-  border-radius:999px;
-  padding:8px 11px;
-  color:#dbe5e0;
-  font-size:12px;
-  font-weight:850;
-}
-
-.zero-hero{
-  margin:28px 0 8px;
+.percent{
   color:var(--green);
-  font-size:clamp(90px,18vw,180px);
-  line-height:.82;
+  font-size:clamp(65px,11vw,112px);
   font-weight:950;
-  letter-spacing:-8px;
+  line-height:1;
 }
 
-.zero-label{
-  color:#dce6e1;
+.burned{
+  margin-top:10px;
+  color:var(--muted);
+  font-size:20px;
+}
+
+input[type=range]{
+  width:100%;
+  margin:22px 0 12px;
+  accent-color:var(--green);
+  cursor:pointer;
+}
+
+.range-labels{
+  display:flex;
+  justify-content:space-between;
+  color:#a8bbb1;
   font-size:13px;
+  margin-bottom:24px;
+}
+
+/* NEW: dynamic Mission 1 feedback */
+
+.burn-feedback{
+  display:none;
+  margin:18px 0 22px;
+  padding:18px 20px;
+  border:1px solid rgba(255,107,107,.38);
+  border-radius:16px;
+  background:rgba(255,107,107,.055);
+  text-align:center;
+  animation:feedbackIn .22s ease;
+}
+
+.burn-feedback.show{display:block;}
+
+.burn-feedback-title{
+  color:#fff;
   font-weight:950;
+  font-size:18px;
+  letter-spacing:.6px;
+}
+
+.burn-feedback-hint{
+  margin-top:8px;
+  color:#c7d2cd;
+  font-size:14px;
+  line-height:1.45;
+}
+
+.burn-feedback-action{
+  margin-top:10px;
+  color:var(--green);
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:1.5px;
+}
+
+@keyframes feedbackIn{
+  from{opacity:0;transform:translateY(-6px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.answers{
+  display:grid;
+  gap:14px;
+  margin-top:34px;
+}
+
+.answer{
+  border:1px solid var(--line);
+  background:rgba(9,16,13,.72);
+  color:var(--text);
+  border-radius:22px;
+  padding:25px 28px;
+  text-align:left;
+  cursor:pointer;
+  transition:.18s ease;
+}
+
+.answer:hover{
+  border-color:var(--green);
+  transform:translateY(-2px);
+}
+
+.answer strong{
+  display:block;
+  font-size:21px;
+  margin-bottom:8px;
+}
+
+.answer span{
+  color:var(--muted);
+  font-size:16px;
+}
+
+.number-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:16px;
+  margin-top:35px;
+}
+
+.number-choice{
+  min-height:150px;
+  border:1px solid var(--line);
+  border-radius:24px;
+  background:rgba(9,16,13,.72);
+  color:white;
+  font-size:clamp(40px,7vw,64px);
+  font-weight:950;
+  cursor:pointer;
+  transition:.18s ease;
+}
+
+.number-choice:hover{
+  border-color:var(--green);
+  transform:translateY(-3px);
+}
+
+.flash{
+  position:fixed;
+  inset:0;
+  z-index:50;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(2,7,5,.96);
+  opacity:0;
+  pointer-events:none;
+  transition:.18s ease;
+}
+
+.flash.show{opacity:1;}
+
+.flash-content{
+  text-align:center;
+  padding:30px;
+}
+
+.flash-big{
+  color:var(--green);
+  font-size:clamp(54px,12vw,120px);
+  font-weight:950;
+  line-height:1;
+}
+
+.flash-small{
+  margin-top:18px;
+  color:#c9d7d0;
+  font-size:20px;
+  font-weight:800;
   letter-spacing:2px;
 }
 
-'''
-html = html.replace(marker, styles + marker, 1)
+.toast{
+  position:fixed;
+  z-index:60;
+  top:70px;
+  left:50%;
+  transform:translate(-50%,-20px);
+  background:var(--green);
+  color:#02110b;
+  padding:13px 22px;
+  border-radius:999px;
+  font-weight:950;
+  opacity:0;
+  pointer-events:none;
+  transition:.25s ease;
+}
 
-# 2) Replace Mission 2 with educational wrong-answer feedback
-old_m2 = '''    <div class="answers">
+.toast.show{
+  opacity:1;
+  transform:translate(-50%,0);
+}
+
+.wrong{
+  border-color:var(--danger)!important;
+  animation:shake .28s linear;
+}
+
+@keyframes shake{
+  25%{transform:translateX(-6px)}
+  50%{transform:translateX(6px)}
+  75%{transform:translateX(-4px)}
+}
+
+.burn-animation{
+  animation:burnPulse .7s ease;
+}
+
+@keyframes burnPulse{
+  0%{transform:scale(1);filter:blur(0)}
+  45%{transform:scale(1.08);color:var(--green)}
+  100%{transform:scale(1);filter:blur(0)}
+}
+
+.result{text-align:center;}
+
+.badge{
+  width:86px;
+  height:86px;
+  border:1px solid var(--green);
+  border-radius:50%;
+  margin:0 auto 26px;
+  display:grid;
+  place-items:center;
+  color:var(--green);
+  font-weight:950;
+  font-size:26px;
+}
+
+.result-title{
+  font-size:clamp(43px,8vw,82px);
+  font-weight:950;
+  line-height:.95;
+  letter-spacing:-3px;
+}
+
+.score{
+  margin:35px 0 5px;
+  font-size:clamp(78px,14vw,150px);
+  line-height:.9;
+  font-weight:950;
+}
+
+.score .green{color:var(--green);}
+
+.result-sub{
+  color:#b7c9c0;
+  font-size:18px;
+}
+
+.reveal{
+  margin:38px auto 0;
+  padding:25px;
+  max-width:720px;
+  border:1px solid rgba(102,247,184,.3);
+  background:rgba(102,247,184,.045);
+  border-radius:22px;
+}
+
+.reveal strong{
+  display:block;
+  color:var(--green);
+  font-size:31px;
+  margin-bottom:9px;
+}
+
+.reveal p{
+  color:#c5d2cc;
+  line-height:1.5;
+}
+
+.fact-table{
+  max-width:760px;
+  margin:25px auto 0;
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:18px 28px;
+  text-align:left;
+}
+
+.fact{
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  padding:15px 0;
+  border-bottom:1px solid var(--line);
+}
+
+.fact:last-child{border-bottom:0;}
+
+.fact span{color:#a9bcb2;}
+
+.fact strong{text-align:right;}
+
+.result-actions{
+  max-width:760px;
+  margin:22px auto 0;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+
+.secondary{
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:20px;
+  background:transparent;
+  color:white;
+  font-weight:900;
+  font-size:16px;
+  cursor:pointer;
+}
+
+.secondary:hover{border-color:var(--green);}
+
+.verify{
+  background:var(--green);
+  color:#02110b;
+  border-color:var(--green);
+}
+
+.note{
+  max-width:760px;
+  margin:18px auto 0;
+  color:#70867b;
+  font-size:12px;
+  line-height:1.5;
+}
+
+@media(max-width:650px){
+  .screen{padding:70px 18px 30px;}
+  h1{letter-spacing:-2px;}
+  .stats{grid-template-columns:1fr 1fr 1fr;}
+  .stat{padding:14px 8px;}
+  .stat strong{font-size:20px;}
+  .supply-row{flex-direction:column;}
+  .number-grid{gap:10px;}
+  .number-choice{min-height:120px;}
+  .result-actions{grid-template-columns:1fr;}
+  .fact{font-size:14px;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="topbar" id="topbar">
+  <div class="topbar-inner">
+    <div class="progress">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="hud" id="hud">0 XP</div>
+  </div>
+</div>
+
+<div class="toast" id="toast">+300 XP</div>
+
+<div class="flash" id="flash">
+  <div class="flash-content">
+    <div class="flash-big" id="flashBig">+300 XP</div>
+    <div class="flash-small" id="flashSmall">MISSION CLEARED</div>
+  </div>
+</div>
+
+<!-- START -->
+<section class="screen active" id="start">
+  <div class="wrap">
+    <div class="brand">$STREAM · ON-CHAIN CHALLENGE</div>
+
+    <h1>
+      1 BILLION $STREAM existed.
+      <span class="accent">Where did 700M go?</span>
+    </h1>
+
+    <p class="lead">
+      Three decisions. One irreversible event.
+      Trace the historic supply burn and uncover the number most people miss.
+    </p>
+
+    <div class="panel">
+      <div class="stats">
+        <div class="stat">
+          <strong>3</strong>
+          <span>Decisions</span>
+        </div>
+
+        <div class="stat">
+          <strong>900</strong>
+          <span>Max XP</span>
+        </div>
+
+        <div class="stat">
+          <strong>~25s</strong>
+          <span>To solve</span>
+        </div>
+      </div>
+
+      <button class="primary" onclick="startGame()">
+        START INVESTIGATION →
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- MISSION 1 -->
+<section class="screen mission" id="mission1">
+  <div class="wrap">
+    <div class="eyebrow">01 / SUPPLY SHOCK</div>
+
+    <h2>How much of the original supply disappeared?</h2>
+
+    <p class="mission-copy">
+      Start with 1 billion $STREAM. Set the historic burn percentage.
+    </p>
+
+    <div class="supply-box">
+      <div class="supply-row">
+        <div>
+          <div class="label">Original supply</div>
+          <div class="big-number">1,000,000,000</div>
+        </div>
+
+        <div>
+          <div class="label">Remaining supply</div>
+          <div class="big-number" id="remainingSupply">500M</div>
+        </div>
+      </div>
+
+      <div class="burn-display">
+        <div class="percent" id="burnPercent">50%</div>
+        <div class="burned" id="burnAmount">500M $STREAM burned</div>
+      </div>
+
+      <input
+        id="burnSlider"
+        type="range"
+        min="0"
+        max="100"
+        value="50"
+        oninput="updateBurn()"
+      >
+
+      <div class="range-labels">
+        <span>0%</span>
+        <span>50%</span>
+        <span>100%</span>
+      </div>
+
+      <div class="burn-feedback" id="burnFeedback">
+        <div class="burn-feedback-title" id="burnFeedbackTitle"></div>
+        <div class="burn-feedback-hint" id="burnFeedbackHint"></div>
+        <div class="burn-feedback-action">ADJUST THE BURN → TRY AGAIN</div>
+      </div>
+
+      <button class="primary" onclick="lockBurn()">
+        LOCK ANSWER
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- MISSION 2 -->
+<section class="screen mission" id="mission2">
+  <div class="wrap">
+    <div class="eyebrow">02 / MECHANISM</div>
+
+    <h2>What actually happened to the tokens?</h2>
+
+    <p class="mission-copy">
+      699.99M $STREAM left the supply story. Identify the mechanism.
+    </p>
+
+    <div class="answers">
       <button class="answer" onclick="wrongAnswer(this)">
         <strong>LOCKED</strong>
         <span>The tokens still exist but cannot move temporarily.</span>
       </button>
 
       <button class="answer" onclick="wrongAnswer(this)">
-        <strong>VESTED</strong>
-        <span>The tokens unlock according to a future schedule.</span>
-      </button>
-
-      <button class="answer" onclick="correctMechanism()">
-        <strong>BURNED</strong>
-        <span>The tokens were permanently removed from supply.</span>
-      </button>
-    </div>'''
-new_m2 = '''    <div class="answers">
-      <button class="answer" onclick="mechanismWrong(this,'locked')">
-        <strong>LOCKED</strong>
-        <span>The tokens still exist but cannot move temporarily.</span>
-      </button>
-
-      <button class="answer" onclick="mechanismWrong(this,'vested')">
         <strong>VESTED</strong>
         <span>The tokens unlock according to a future schedule.</span>
       </button>
@@ -158,19 +718,353 @@ new_m2 = '''    <div class="answers">
         <span>The tokens were permanently removed from supply.</span>
       </button>
     </div>
+  </div>
+</section>
 
-    <div class="choice-feedback" id="mechanismFeedback" aria-live="polite">
-      <div class="choice-feedback-title" id="mechanismFeedbackTitle"></div>
-      <div class="choice-feedback-copy" id="mechanismFeedbackCopy"></div>
-      <span class="choice-feedback-hint" id="mechanismFeedbackHint"></span>
-    </div>'''
-html = html.replace(old_m2, new_m2, 1)
+<!-- MISSION 3 -->
+<section class="screen mission" id="mission3">
+  <div class="wrap">
+    <div class="eyebrow">FINAL / THE NUMBER PEOPLE MISS</div>
 
-# 3) Replace Mission 3 choices with specific feedback
-old_m3 = '''    <div class="number-grid">
+    <h2>What remained in the Foundation treasury?</h2>
+
+    <p class="mission-copy">
+      Everyone sees the ~70% burn. One number tells the deeper story.
+    </p>
+
+    <div class="number-grid">
       <button class="number-choice" onclick="wrongAnswer(this)">699.99M</button>
       <button class="number-choice" onclick="wrongAnswer(this)">300M</button>
       <button class="number-choice" onclick="wrongAnswer(this)">70%</button>
       <button class="number-choice accent" onclick="finalAnswer()">0</button>
-    </div>'''
-new_m3 =
+    </div>
+  </div>
+</section>
+
+<!-- RESULT -->
+<section class="screen" id="result">
+  <div class="wrap result">
+
+    <div class="badge">✓</div>
+
+    <div class="eyebrow">CHALLENGE COMPLETE</div>
+
+    <div class="result-title">
+      ON-CHAIN<br>DETECTIVE
+    </div>
+
+    <div class="score">
+      <span class="green">900</span>/900
+    </div>
+
+    <div class="result-sub">
+      3/3 missions solved · Perfect investigation
+    </div>
+
+    <div class="reveal">
+      <strong>THE NUMBER WAS 0.</strong>
+      <p>
+        The Foundation reported burning all $STREAM tokens under its control,
+        leaving zero $STREAM in the Foundation treasury.
+      </p>
+    </div>
+
+    <div class="fact-table">
+      <div class="fact">
+        <span>Original supply</span>
+        <strong>1B $STREAM</strong>
+      </div>
+
+      <div class="fact">
+        <span>Permanently burned</span>
+        <strong>699.99M $STREAM</strong>
+      </div>
+
+      <div class="fact">
+        <span>Post-burn supply</span>
+        <strong>300M $STREAM</strong>
+      </div>
+
+      <div class="fact">
+        <span>Foundation treasury after burn</span>
+        <strong>0 $STREAM</strong>
+      </div>
+    </div>
+
+    <div class="result-actions">
+      <button class="secondary verify" onclick="verifyOnChain()">
+        VERIFY ON SOLSCAN ↗
+      </button>
+
+      <button class="secondary" onclick="shareResult()">
+        SHARE MY 900/900 ↗
+      </button>
+    </div>
+
+    <div class="note">
+      Don't trust the game. Verify the event on-chain.
+      On-chain evidence should be treated as the source of truth.
+    </div>
+
+  </div>
+</section>
+
+<script>
+let xp = 0;
+let streak = 0;
+
+function showScreen(id){
+  document.querySelectorAll(".screen").forEach(screen=>{
+    screen.classList.remove("active");
+  });
+
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0,0);
+}
+
+function startGame(){
+  document.getElementById("topbar").classList.add("show");
+  setProgress(5);
+  showScreen("mission1");
+}
+
+function setProgress(value){
+  document.getElementById("progressFill").style.width = value + "%";
+}
+
+function updateHud(){
+  let text = xp + " XP";
+
+  if(streak > 1){
+    text += " · " + streak + "× STREAK";
+  }
+
+  document.getElementById("hud").textContent = text;
+}
+
+function updateBurn(){
+  const value = Number(document.getElementById("burnSlider").value);
+
+  const burned = value * 10;
+  const remaining = 1000 - burned;
+
+  document.getElementById("burnPercent").textContent = value + "%";
+  document.getElementById("burnAmount").textContent =
+    burned + "M $STREAM burned";
+
+  document.getElementById("remainingSupply").textContent =
+    remaining + "M";
+
+  /* Hide the previous clue when the player moves the slider */
+  const feedback = document.getElementById("burnFeedback");
+  feedback.classList.remove("show");
+}
+
+function awardXP(message, callback){
+  xp += 300;
+  streak += 1;
+
+  updateHud();
+
+  const toast = document.getElementById("toast");
+  toast.textContent =
+    "+300 XP" + (streak > 1 ? " · " + streak + "× STREAK" : "");
+
+  toast.classList.add("show");
+
+  setTimeout(()=>{
+    toast.classList.remove("show");
+  },650);
+
+  const flash = document.getElementById("flash");
+
+  document.getElementById("flashBig").textContent = "+300 XP";
+  document.getElementById("flashSmall").textContent = message;
+
+  setTimeout(()=>{
+    flash.classList.add("show");
+  },180);
+
+  setTimeout(()=>{
+    flash.classList.remove("show");
+
+    if(callback){
+      callback();
+    }
+  },720);
+}
+
+function showBurnFeedback(title, hint){
+  const feedback = document.getElementById("burnFeedback");
+
+  document.getElementById("burnFeedbackTitle").textContent = title;
+  document.getElementById("burnFeedbackHint").textContent = hint;
+
+  feedback.classList.remove("show");
+
+  /* restart animation even on repeated attempts */
+  void feedback.offsetWidth;
+
+  feedback.classList.add("show");
+}
+
+function lockBurn(){
+  const value = Number(document.getElementById("burnSlider").value);
+
+  if(value !== 70){
+    streak = 0;
+    updateHud();
+
+    const box = document.querySelector("#mission1 .supply-box");
+
+    box.classList.remove("wrong");
+    void box.offsetWidth;
+    box.classList.add("wrong");
+
+    setTimeout(()=>{
+      box.classList.remove("wrong");
+    },350);
+
+    const remaining = 1000 - (value * 10);
+    const distance = Math.abs(70 - value) * 10;
+
+    let title = "";
+    let hint = "";
+
+    if(value === 69){
+      title = "SO CLOSE.";
+      hint = "Only 10M $STREAM separates you from the historic burn.";
+    }
+    else if(value === 71){
+      title = "OVERSHOT.";
+      hint = "Bring 10M $STREAM back.";
+    }
+    else if(value === 100){
+      title = "TOTAL EXTINCTION? NOT QUITE.";
+      hint = "The historic burn left roughly 300M $STREAM in supply.";
+    }
+    else if(value === 0){
+      title = "NOTHING BURNED?";
+      hint = "The supply shock was massive. Push the burn much further.";
+    }
+    else if(value < 70){
+      title = remaining + "M WOULD STILL REMAIN.";
+      hint =
+        "The real burn went deeper — another " +
+        distance +
+        "M $STREAM disappeared.";
+    }
+    else{
+      title = "ONLY " + remaining + "M WOULD REMAIN.";
+      hint =
+        "Too far — restore " +
+        distance +
+        "M $STREAM to reach the historic burn.";
+    }
+
+    showBurnFeedback(title, hint);
+    return;
+  }
+
+  /* Correct answer */
+  document.getElementById("burnFeedback").classList.remove("show");
+
+  const remaining = document.getElementById("remainingSupply");
+  const percent = document.getElementById("burnPercent");
+
+  remaining.textContent = "300M";
+
+  percent.classList.remove("burn-animation");
+  remaining.classList.remove("burn-animation");
+
+  void percent.offsetWidth;
+
+  percent.classList.add("burn-animation");
+  remaining.classList.add("burn-animation");
+
+  awardXP("SUPPLY SHOCK FOUND", ()=>{
+    setProgress(34);
+    showScreen("mission2");
+  });
+}
+
+function wrongAnswer(element){
+  streak = 0;
+  updateHud();
+
+  element.classList.add("wrong");
+
+  setTimeout(()=>{
+    element.classList.remove("wrong");
+  },400);
+}
+
+function correctMechanism(){
+  awardXP("PERMANENTLY REMOVED ✓", ()=>{
+    setProgress(67);
+    showScreen("mission3");
+  });
+}
+
+function finalAnswer(){
+  xp += 300;
+  streak += 1;
+  updateHud();
+  setProgress(100);
+
+  const flash = document.getElementById("flash");
+
+  document.getElementById("flashBig").textContent = "0";
+  document.getElementById("flashSmall").textContent =
+    "ZERO $STREAM REMAINED IN THE FOUNDATION TREASURY";
+
+  flash.classList.add("show");
+
+  setTimeout(()=>{
+    document.getElementById("flashBig").textContent = "900/900";
+    document.getElementById("flashSmall").textContent =
+      "ON-CHAIN DETECTIVE";
+  },850);
+
+  setTimeout(()=>{
+    flash.classList.remove("show");
+    showScreen("result");
+  },1650);
+}
+
+function verifyOnChain(){
+  /*
+    Replace this with the exact verified Solscan evidence URL
+    once the proof link is confirmed.
+  */
+  window.open(
+    "https://solscan.io/",
+    "_blank",
+    "noopener,noreferrer"
+  );
+}
+
+function shareResult(){
+  const text =
+    "I scored 900/900 on the $STREAM Burn Challenge — " +
+    "3 decisions to trace the historic supply burn on-chain. " +
+    "The number that mattered most? 0.";
+
+  const url = window.location.href;
+
+  const shareURL =
+    "https://twitter.com/intent/tweet?text=" +
+    encodeURIComponent(text) +
+    "&url=" +
+    encodeURIComponent(url);
+
+  window.open(
+    shareURL,
+    "_blank",
+    "noopener,noreferrer"
+  );
+}
+</script>
+
+</body>
+</html>
