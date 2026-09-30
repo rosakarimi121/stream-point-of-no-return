@@ -23,9 +23,7 @@
   --danger:#ff6b6b;
 }
 
-html{
-  scroll-behavior:smooth;
-}
+html{scroll-behavior:smooth;}
 
 body{
   min-height:100vh;
@@ -37,9 +35,7 @@ body{
   overflow-x:hidden;
 }
 
-button{
-  font:inherit;
-}
+button{font:inherit;}
 
 .screen{
   display:none;
@@ -96,9 +92,7 @@ h2{
   letter-spacing:-2px;
 }
 
-.accent{
-  color:var(--green);
-}
+.accent{color:var(--green);}
 
 .lead{
   margin-top:28px;
@@ -174,9 +168,7 @@ h2{
   pointer-events:none;
 }
 
-.topbar.show{
-  display:flex;
-}
+.topbar.show{display:flex;}
 
 .topbar-inner{
   width:min(980px,100%);
@@ -206,9 +198,7 @@ h2{
   font-size:13px;
 }
 
-.mission{
-  padding-top:80px;
-}
+.mission{padding-top:80px;}
 
 .mission-copy{
   margin-top:20px;
@@ -276,6 +266,48 @@ input[type=range]{
   color:#a8bbb1;
   font-size:13px;
   margin-bottom:24px;
+}
+
+/* NEW: dynamic Mission 1 feedback */
+
+.burn-feedback{
+  display:none;
+  margin:18px 0 22px;
+  padding:18px 20px;
+  border:1px solid rgba(255,107,107,.38);
+  border-radius:16px;
+  background:rgba(255,107,107,.055);
+  text-align:center;
+  animation:feedbackIn .22s ease;
+}
+
+.burn-feedback.show{display:block;}
+
+.burn-feedback-title{
+  color:#fff;
+  font-weight:950;
+  font-size:18px;
+  letter-spacing:.6px;
+}
+
+.burn-feedback-hint{
+  margin-top:8px;
+  color:#c7d2cd;
+  font-size:14px;
+  line-height:1.45;
+}
+
+.burn-feedback-action{
+  margin-top:10px;
+  color:var(--green);
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:1.5px;
+}
+
+@keyframes feedbackIn{
+  from{opacity:0;transform:translateY(-6px)}
+  to{opacity:1;transform:translateY(0)}
 }
 
 .answers{
@@ -348,9 +380,7 @@ input[type=range]{
   transition:.18s ease;
 }
 
-.flash.show{
-  opacity:1;
-}
+.flash.show{opacity:1;}
 
 .flash-content{
   text-align:center;
@@ -414,9 +444,7 @@ input[type=range]{
   100%{transform:scale(1);filter:blur(0)}
 }
 
-.result{
-  text-align:center;
-}
+.result{text-align:center;}
 
 .badge{
   width:86px;
@@ -445,9 +473,7 @@ input[type=range]{
   font-weight:950;
 }
 
-.score .green{
-  color:var(--green);
-}
+.score .green{color:var(--green);}
 
 .result-sub{
   color:#b7c9c0;
@@ -492,17 +518,11 @@ input[type=range]{
   border-bottom:1px solid var(--line);
 }
 
-.fact:last-child{
-  border-bottom:0;
-}
+.fact:last-child{border-bottom:0;}
 
-.fact span{
-  color:#a9bcb2;
-}
+.fact span{color:#a9bcb2;}
 
-.fact strong{
-  text-align:right;
-}
+.fact strong{text-align:right;}
 
 .result-actions{
   max-width:760px;
@@ -523,9 +543,7 @@ input[type=range]{
   cursor:pointer;
 }
 
-.secondary:hover{
-  border-color:var(--green);
-}
+.secondary:hover{border-color:var(--green);}
 
 .verify{
   background:var(--green);
@@ -542,45 +560,16 @@ input[type=range]{
 }
 
 @media(max-width:650px){
-  .screen{
-    padding:70px 18px 30px;
-  }
-
-  h1{
-    letter-spacing:-2px;
-  }
-
-  .stats{
-    grid-template-columns:1fr 1fr 1fr;
-  }
-
-  .stat{
-    padding:14px 8px;
-  }
-
-  .stat strong{
-    font-size:20px;
-  }
-
-  .supply-row{
-    flex-direction:column;
-  }
-
-  .number-grid{
-    gap:10px;
-  }
-
-  .number-choice{
-    min-height:120px;
-  }
-
-  .result-actions{
-    grid-template-columns:1fr;
-  }
-
-  .fact{
-    font-size:14px;
-  }
+  .screen{padding:70px 18px 30px;}
+  h1{letter-spacing:-2px;}
+  .stats{grid-template-columns:1fr 1fr 1fr;}
+  .stat{padding:14px 8px;}
+  .stat strong{font-size:20px;}
+  .supply-row{flex-direction:column;}
+  .number-grid{gap:10px;}
+  .number-choice{min-height:120px;}
+  .result-actions{grid-template-columns:1fr;}
+  .fact{font-size:14px;}
 }
 </style>
 </head>
@@ -687,6 +676,12 @@ input[type=range]{
         <span>0%</span>
         <span>50%</span>
         <span>100%</span>
+      </div>
+
+      <div class="burn-feedback" id="burnFeedback">
+        <div class="burn-feedback-title" id="burnFeedbackTitle"></div>
+        <div class="burn-feedback-hint" id="burnFeedbackHint"></div>
+        <div class="burn-feedback-action">ADJUST THE BURN → TRY AGAIN</div>
       </div>
 
       <button class="primary" onclick="lockBurn()">
@@ -859,6 +854,10 @@ function updateBurn(){
 
   document.getElementById("remainingSupply").textContent =
     remaining + "M";
+
+  /* Hide the previous clue when the player moves the slider */
+  const feedback = document.getElementById("burnFeedback");
+  feedback.classList.remove("show");
 }
 
 function awardXP(message, callback){
@@ -895,6 +894,20 @@ function awardXP(message, callback){
   },720);
 }
 
+function showBurnFeedback(title, hint){
+  const feedback = document.getElementById("burnFeedback");
+
+  document.getElementById("burnFeedbackTitle").textContent = title;
+  document.getElementById("burnFeedbackHint").textContent = hint;
+
+  feedback.classList.remove("show");
+
+  /* restart animation even on repeated attempts */
+  void feedback.offsetWidth;
+
+  feedback.classList.add("show");
+}
+
 function lockBurn(){
   const value = Number(document.getElementById("burnSlider").value);
 
@@ -903,19 +916,69 @@ function lockBurn(){
     updateHud();
 
     const box = document.querySelector("#mission1 .supply-box");
+
+    box.classList.remove("wrong");
+    void box.offsetWidth;
     box.classList.add("wrong");
 
     setTimeout(()=>{
       box.classList.remove("wrong");
     },350);
 
+    const remaining = 1000 - (value * 10);
+    const distance = Math.abs(70 - value) * 10;
+
+    let title = "";
+    let hint = "";
+
+    if(value === 69){
+      title = "SO CLOSE.";
+      hint = "Only 10M $STREAM separates you from the historic burn.";
+    }
+    else if(value === 71){
+      title = "OVERSHOT.";
+      hint = "Bring 10M $STREAM back.";
+    }
+    else if(value === 100){
+      title = "TOTAL EXTINCTION? NOT QUITE.";
+      hint = "The historic burn left roughly 300M $STREAM in supply.";
+    }
+    else if(value === 0){
+      title = "NOTHING BURNED?";
+      hint = "The supply shock was massive. Push the burn much further.";
+    }
+    else if(value < 70){
+      title = remaining + "M WOULD STILL REMAIN.";
+      hint =
+        "The real burn went deeper — another " +
+        distance +
+        "M $STREAM disappeared.";
+    }
+    else{
+      title = "ONLY " + remaining + "M WOULD REMAIN.";
+      hint =
+        "Too far — restore " +
+        distance +
+        "M $STREAM to reach the historic burn.";
+    }
+
+    showBurnFeedback(title, hint);
     return;
   }
+
+  /* Correct answer */
+  document.getElementById("burnFeedback").classList.remove("show");
 
   const remaining = document.getElementById("remainingSupply");
   const percent = document.getElementById("burnPercent");
 
   remaining.textContent = "300M";
+
+  percent.classList.remove("burn-animation");
+  remaining.classList.remove("burn-animation");
+
+  void percent.offsetWidth;
+
   percent.classList.add("burn-animation");
   remaining.classList.add("burn-animation");
 
@@ -971,8 +1034,8 @@ function finalAnswer(){
 
 function verifyOnChain(){
   /*
-    Keep the existing verified Solscan evidence URL here
-    if you already have the exact transaction/token proof.
+    Replace this with the exact verified Solscan evidence URL
+    once the proof link is confirmed.
   */
   window.open(
     "https://solscan.io/",
