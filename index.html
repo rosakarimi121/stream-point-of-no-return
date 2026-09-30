@@ -2,23 +2,33 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#07110d">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#fff8f3">
 
 <title>$STREAM — Point of No Return</title>
 
 <style>
 :root{
-  --bg:#07110d;
-  --panel:#0c1712;
-  --panel2:#101f18;
-  --green:#66f7b8;
-  --green2:#26d98d;
-  --text:#f4fff9;
-  --muted:#91a89d;
-  --line:rgba(102,247,184,.16);
-  --danger:#ff6b6b;
-  --danger-bg:rgba(255,107,107,.08);
+  --bg:#fffaf6;
+  --white:#ffffff;
+  --ink:#172033;
+  --muted:#6f7688;
+
+  --purple:#7357ff;
+  --purple2:#9a75ff;
+  --blue:#42b9ff;
+  --pink:#ff6fae;
+  --coral:#ff8066;
+  --lime:#b8ef58;
+  --yellow:#ffd45a;
+  --mint:#69e6bd;
+
+  --line:#e8e4f1;
+  --shadow:0 20px 60px rgba(77,62,120,.12);
+  --softShadow:0 10px 30px rgba(77,62,120,.08);
+
+  --danger:#e54f6d;
+  --dangerBg:#fff0f3;
 }
 
 *{
@@ -32,12 +42,23 @@ html{
 body{
   margin:0;
   min-height:100vh;
+  color:var(--ink);
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
   background:
-    radial-gradient(circle at 50% -10%,rgba(102,247,184,.13),transparent 35%),
-    radial-gradient(circle at 100% 100%,rgba(38,217,141,.05),transparent 30%),
+    radial-gradient(circle at 8% 8%,rgba(255,111,174,.16),transparent 25%),
+    radial-gradient(circle at 92% 8%,rgba(66,185,255,.17),transparent 26%),
+    radial-gradient(circle at 50% 100%,rgba(184,239,88,.14),transparent 28%),
     var(--bg);
-  color:var(--text);
-  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+
+  overflow-x:hidden;
 }
 
 button,
@@ -49,90 +70,129 @@ button{
   -webkit-tap-highlight-color:transparent;
 }
 
+button:focus-visible,
+input:focus-visible{
+  outline:3px solid rgba(115,87,255,.22);
+  outline-offset:3px;
+}
+
 .wrap{
-  width:min(940px,calc(100% - 32px));
+  width:min(920px,calc(100% - 30px));
   margin:auto;
 }
 
+
+/* TOP BAR */
+
 .topbar{
   position:fixed;
-  z-index:30;
+  z-index:40;
   top:0;
   left:0;
   right:0;
-  height:58px;
-  background:rgba(7,17,13,.83);
-  backdrop-filter:blur(16px);
-  border-bottom:1px solid var(--line);
+  height:62px;
+
+  background:rgba(255,250,246,.83);
+  backdrop-filter:blur(18px);
+
+  border-bottom:1px solid rgba(115,87,255,.09);
 }
 
 .topbar-inner{
   height:100%;
+
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:20px;
+  gap:16px;
 }
 
 .brand{
-  color:var(--green);
-  font-size:13px;
-  font-weight:900;
-  letter-spacing:.16em;
-}
-
-.score{
-  display:flex;
-  gap:14px;
-  color:var(--muted);
   font-size:12px;
-  font-weight:800;
+  font-weight:950;
+  letter-spacing:.13em;
+
+  background:linear-gradient(
+    90deg,
+    var(--purple),
+    var(--pink)
+  );
+
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
 }
 
-.score strong{
-  color:var(--green);
+.hud{
+  display:flex;
+  align-items:center;
+  gap:13px;
+
+  font-size:11px;
+  font-weight:850;
+  color:var(--muted);
 }
 
-.progress{
+.hud strong{
+  color:var(--purple);
+}
+
+.progress-track{
   position:absolute;
   left:0;
   bottom:-1px;
+
   width:100%;
-  height:2px;
-  background:rgba(255,255,255,.03);
+  height:3px;
+
+  background:rgba(115,87,255,.05);
 }
 
-.progress span{
-  display:block;
-  width:0;
+.progress-fill{
   height:100%;
-  background:var(--green);
-  box-shadow:0 0 15px rgba(102,247,184,.8);
-  transition:width .5s ease;
+  width:0;
+
+  background:linear-gradient(
+    90deg,
+    var(--purple),
+    var(--pink),
+    var(--yellow)
+  );
+
+  transition:width .4s ease;
 }
+
+
+/* SCREENS */
 
 .screen{
   min-height:100vh;
-  padding:100px 0 55px;
+  padding:92px 0 45px;
+
   display:none;
   align-items:center;
 }
 
 .screen.active{
   display:flex;
-  animation:screenIn .45s ease both;
+
+  animation:screenIn .38s ease both;
 }
 
 @keyframes screenIn{
   from{
     opacity:0;
-    transform:translateY(12px);
+    transform:translateY(10px);
   }
+
   to{
     opacity:1;
     transform:none;
   }
 }
+
+
+/* HERO */
 
 .hero{
   text-align:center;
@@ -140,301 +200,673 @@ button{
   margin:auto;
 }
 
-.eyebrow{
-  color:var(--green);
-  text-transform:uppercase;
-  letter-spacing:.19em;
-  font-size:11px;
-  font-weight:900;
-  margin-bottom:18px;
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+
+  padding:9px 13px;
+
+  border-radius:999px;
+
+  background:rgba(255,255,255,.75);
+  border:1px solid rgba(115,87,255,.12);
+
+  box-shadow:var(--softShadow);
+
+  color:var(--purple);
+  font-size:10px;
+  font-weight:950;
+  letter-spacing:.15em;
 }
 
-h1{
-  margin:0;
-  font-size:clamp(42px,8vw,88px);
-  line-height:.92;
-  letter-spacing:-.055em;
+.badge-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+
+  background:var(--lime);
+
+  box-shadow:0 0 0 5px rgba(184,239,88,.18);
 }
 
-h2{
-  margin:0;
-  font-size:clamp(34px,6vw,64px);
-  line-height:1;
-  letter-spacing:-.045em;
+.hero h1{
+  margin:25px 0 0;
+
+  font-size:clamp(48px,9vw,94px);
+  line-height:.91;
+  letter-spacing:-.065em;
+
+  font-weight:950;
 }
 
-.lead{
+.gradient-text{
+  background:linear-gradient(
+    90deg,
+    var(--purple),
+    var(--pink),
+    var(--coral)
+  );
+
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+.hero-copy{
   max-width:650px;
   margin:24px auto 0;
-  color:#b4c7be;
-  font-size:clamp(16px,2.2vw,20px);
-  line-height:1.6;
+
+  color:var(--muted);
+
+  font-size:clamp(16px,2.2vw,19px);
+  line-height:1.58;
 }
 
-.highlight{
-  color:var(--green);
+.hero-copy strong{
+  color:var(--ink);
 }
 
-.stats{
-  margin:38px auto 32px;
+.quick-stats{
+  max-width:620px;
+  margin:34px auto 28px;
+
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  max-width:620px;
-  border:1px solid var(--line);
-  border-radius:16px;
+
   overflow:hidden;
-  background:rgba(255,255,255,.018);
+
+  background:rgba(255,255,255,.72);
+
+  border:1px solid rgba(115,87,255,.10);
+  border-radius:20px;
+
+  box-shadow:var(--softShadow);
 }
 
-.stat{
-  padding:18px 10px;
+.quick-stat{
+  padding:17px 10px;
 }
 
-.stat+.stat{
+.quick-stat + .quick-stat{
   border-left:1px solid var(--line);
 }
 
-.stat strong{
+.quick-stat strong{
   display:block;
-  font-size:20px;
-  color:var(--text);
+
+  font-size:19px;
+  font-weight:950;
 }
 
-.stat span{
+.quick-stat span{
   display:block;
+  margin-top:3px;
+
   color:var(--muted);
-  font-size:10px;
-  margin-top:4px;
-  font-weight:800;
-  letter-spacing:.1em;
+
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:.11em;
 }
+
+
+/* BUTTONS */
 
 .primary,
-.secondary{
-  border:0;
+.secondary,
+.back-btn,
+.option{
   cursor:pointer;
-  border-radius:12px;
-  font-weight:900;
-  letter-spacing:.035em;
-  transition:.2s ease;
+  border:0;
+
+  transition:
+    transform .18s ease,
+    box-shadow .18s ease,
+    border-color .18s ease,
+    background .18s ease;
 }
 
 .primary{
-  padding:17px 25px;
-  background:var(--green);
-  color:#04100b;
-  box-shadow:0 10px 35px rgba(102,247,184,.14);
+  padding:16px 23px;
+
+  border-radius:14px;
+
+  color:white;
+  font-weight:950;
+  letter-spacing:.025em;
+
+  background:linear-gradient(
+    135deg,
+    var(--purple),
+    var(--pink)
+  );
+
+  box-shadow:
+    0 14px 30px rgba(115,87,255,.21);
 }
 
 .primary:hover{
   transform:translateY(-2px);
-  box-shadow:0 15px 40px rgba(102,247,184,.22);
+
+  box-shadow:
+    0 18px 38px rgba(115,87,255,.27);
 }
 
 .secondary{
   padding:15px 20px;
-  color:var(--green);
-  background:transparent;
-  border:1px solid rgba(102,247,184,.28);
+
+  border-radius:14px;
+
+  color:var(--purple);
+  font-weight:900;
+
+  background:white;
+
+  border:1px solid rgba(115,87,255,.17);
 }
 
 .secondary:hover{
-  background:rgba(102,247,184,.06);
+  transform:translateY(-2px);
+  border-color:rgba(115,87,255,.38);
 }
+
+.back-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+
+  padding:9px 12px;
+  margin-bottom:20px;
+
+  border-radius:999px;
+
+  background:white;
+
+  border:1px solid rgba(115,87,255,.13);
+
+  color:var(--muted);
+
+  font-size:11px;
+  font-weight:900;
+
+  box-shadow:0 6px 18px rgba(70,55,110,.06);
+}
+
+.back-btn:hover{
+  transform:translateX(-2px);
+  color:var(--purple);
+  border-color:rgba(115,87,255,.30);
+}
+
+
+/* MISSION */
 
 .mission{
   max-width:760px;
   margin:auto;
 }
 
-.mission-head{
-  margin-bottom:28px;
+.mission-label{
+  color:var(--purple);
+
+  font-size:10px;
+  font-weight:950;
+  letter-spacing:.18em;
+
+  margin-bottom:11px;
 }
 
-.mission-no{
-  color:var(--green);
-  font-size:11px;
-  font-weight:900;
-  letter-spacing:.18em;
-  margin-bottom:12px;
+.mission h2{
+  margin:0;
+
+  font-size:clamp(34px,6vw,60px);
+  line-height:.98;
+  letter-spacing:-.05em;
+
+  font-weight:950;
 }
 
 .question{
-  color:#b6c8c0;
+  max-width:660px;
+  margin-top:14px;
+
+  color:var(--muted);
+
+  font-size:15px;
   line-height:1.55;
-  font-size:16px;
-  margin-top:13px;
-  max-width:650px;
 }
 
-.data-card{
-  margin-top:25px;
+
+/* EVIDENCE STRIP */
+
+.evidence-strip{
+  margin-top:23px;
+
+  display:flex;
+  align-items:center;
+  gap:12px;
+
+  padding:13px 15px;
+
+  border-radius:15px;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(66,185,255,.10),
+      rgba(115,87,255,.07)
+    );
+
+  border:1px solid rgba(66,185,255,.18);
+}
+
+.evidence-icon{
+  flex:0 0 34px;
+
+  width:34px;
+  height:34px;
+
+  display:grid;
+  place-items:center;
+
+  border-radius:11px;
+
+  background:white;
+
+  box-shadow:0 5px 14px rgba(50,90,150,.08);
+
+  font-size:16px;
+}
+
+.evidence-strip small{
+  display:block;
+
+  color:var(--blue);
+
+  font-size:9px;
+  font-weight:950;
+  letter-spacing:.12em;
+
+  margin-bottom:2px;
+}
+
+.evidence-strip strong{
+  display:block;
+
+  font-size:12px;
+  line-height:1.4;
+}
+
+
+/* CARD */
+
+.card{
+  margin-top:22px;
   padding:22px;
-  background:linear-gradient(180deg,rgba(255,255,255,.028),rgba(255,255,255,.012));
-  border:1px solid var(--line);
-  border-radius:18px;
+
+  background:rgba(255,255,255,.82);
+
+  border:1px solid rgba(115,87,255,.11);
+  border-radius:22px;
+
+  box-shadow:var(--shadow);
 }
 
 .data-row{
   display:flex;
-  justify-content:space-between;
   align-items:center;
-  gap:20px;
+  justify-content:space-between;
+  gap:18px;
+
   color:var(--muted);
-  font-size:13px;
+
+  font-size:12px;
+  font-weight:750;
 }
 
 .data-row strong{
-  color:var(--text);
+  color:var(--ink);
+
   font-size:17px;
-}
-
-.slider-zone{
-  margin-top:30px;
-}
-
-.big-percent{
-  text-align:center;
-  font-size:clamp(58px,10vw,92px);
   font-weight:950;
-  letter-spacing:-.07em;
-  color:var(--green);
-  line-height:1;
 }
 
-.big-percent small{
-  font-size:.35em;
+
+/* SLIDER */
+
+.big-number{
+  margin-top:27px;
+
+  text-align:center;
+
+  font-size:clamp(62px,11vw,96px);
+  line-height:.9;
+  letter-spacing:-.07em;
+
+  font-weight:950;
+
+  background:linear-gradient(
+    135deg,
+    var(--purple),
+    var(--pink)
+  );
+
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+.big-number small{
+  font-size:.34em;
   letter-spacing:0;
 }
 
-input[type=range]{
+.slider{
   width:100%;
-  margin:28px 0 18px;
-  accent-color:var(--green);
+  margin:28px 0 17px;
+
+  accent-color:var(--purple);
   cursor:pointer;
 }
 
-.supply-bar{
-  height:12px;
+.supply-track{
+  height:14px;
+
   overflow:hidden;
-  border-radius:100px;
-  background:rgba(255,255,255,.06);
+
+  border-radius:999px;
+
+  background:#eeeaf6;
 }
 
-.supply-burn{
-  height:100%;
+.supply-fill{
   width:50%;
-  background:linear-gradient(90deg,var(--green2),var(--green));
+  height:100%;
+
+  border-radius:999px;
+
+  background:linear-gradient(
+    90deg,
+    var(--purple),
+    var(--pink),
+    var(--coral)
+  );
+
   transition:width .15s ease;
 }
 
-.supply-numbers{
+.supply-meta{
   display:flex;
   justify-content:space-between;
   gap:15px;
+
   margin-top:12px;
+
   color:var(--muted);
-  font-size:12px;
+
+  font-size:11px;
+  font-weight:750;
 }
 
-.supply-numbers strong{
-  color:var(--text);
+.supply-meta strong{
+  color:var(--ink);
+}
+
+.center{
+  text-align:center;
 }
 
 .action{
-  margin-top:27px;
-  text-align:center;
+  margin-top:24px;
 }
+
+
+/* OPTIONS */
 
 .options{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:12px;
-  margin-top:28px;
+  gap:13px;
+
+  margin-top:25px;
 }
 
 .option{
-  min-height:150px;
-  padding:21px 17px;
+  position:relative;
+
+  min-height:154px;
+  padding:20px;
+
   text-align:left;
-  border-radius:16px;
-  border:1px solid var(--line);
-  background:rgba(255,255,255,.018);
-  color:var(--text);
-  cursor:pointer;
-  transition:.2s ease;
+
+  color:var(--ink);
+
+  background:rgba(255,255,255,.83);
+
+  border:1px solid rgba(115,87,255,.11);
+  border-radius:20px;
+
+  box-shadow:var(--softShadow);
 }
 
 .option:hover{
-  transform:translateY(-3px);
-  border-color:rgba(102,247,184,.45);
-  background:rgba(102,247,184,.045);
+  transform:translateY(-4px);
+
+  border-color:rgba(115,87,255,.35);
+
+  box-shadow:0 17px 36px rgba(77,62,120,.12);
+}
+
+.option-tag{
+  display:inline-block;
+
+  margin-bottom:13px;
+  padding:5px 8px;
+
+  border-radius:999px;
+
+  background:#f3efff;
+
+  color:var(--purple);
+
+  font-size:8px;
+  font-weight:950;
+  letter-spacing:.12em;
 }
 
 .option strong{
   display:block;
+
+  margin-bottom:8px;
+
   font-size:20px;
-  margin-bottom:9px;
+  font-weight:950;
 }
 
-.option span{
-  display:block;
+.option p{
+  margin:0;
+
   color:var(--muted);
+
   font-size:12px;
+  line-height:1.5;
+}
+
+
+/* FINAL EVIDENCE */
+
+.evidence-console{
+  margin-top:24px;
+
+  overflow:hidden;
+
+  background:#1e2030;
+
+  color:white;
+
+  border-radius:22px;
+
+  box-shadow:
+    0 22px 55px rgba(30,32,48,.22);
+}
+
+.console-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+
+  padding:13px 16px;
+
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.console-dots{
+  display:flex;
+  gap:6px;
+}
+
+.console-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+}
+
+.console-dot:nth-child(1){
+  background:var(--pink);
+}
+
+.console-dot:nth-child(2){
+  background:var(--yellow);
+}
+
+.console-dot:nth-child(3){
+  background:var(--lime);
+}
+
+.console-top span{
+  color:#aaaec0;
+
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:.12em;
+}
+
+.console-body{
+  padding:21px;
+}
+
+.console-row{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:20px;
+
+  padding:12px 0;
+
+  border-bottom:1px solid rgba(255,255,255,.07);
+
+  font-size:12px;
+}
+
+.console-row:last-child{
+  border-bottom:0;
+}
+
+.console-row span{
+  color:#aeb2c4;
+}
+
+.console-row strong{
+  text-align:right;
+  color:white;
+}
+
+.console-row .hot{
+  color:var(--yellow);
+}
+
+.console-row .good{
+  color:var(--lime);
+}
+
+.clue{
+  margin-top:15px;
+
+  color:#c4c7d5;
+
+  font-size:11px;
   line-height:1.55;
 }
 
+.clue strong{
+  color:var(--lime);
+}
+
+
+/* FINAL OPTIONS */
+
 .final-options{
-  grid-template-columns:repeat(2,1fr);
+  grid-template-columns:repeat(4,1fr);
 }
 
 .final-options .option{
-  min-height:110px;
+  min-height:100px;
+  padding:17px;
+
   text-align:center;
 }
 
 .final-options .option strong{
-  font-size:26px;
+  font-size:24px;
+  margin:0 0 5px;
 }
 
-.micro{
-  margin-top:17px;
-  color:#6f887c;
-  font-size:11px;
-  text-align:center;
+.final-options .option p{
+  font-size:9px;
+  font-weight:850;
+  letter-spacing:.08em;
 }
 
-.modal-backdrop,
-.reveal{
+
+/* FEEDBACK MODAL */
+
+.modal-backdrop{
   position:fixed;
-  inset:0;
   z-index:100;
+
+  inset:0;
+
   display:none;
   align-items:center;
   justify-content:center;
+
   padding:20px;
-}
 
-.modal-backdrop.show,
-.reveal.show{
-  display:flex;
-}
+  background:rgba(38,31,57,.35);
 
-.modal-backdrop{
-  background:rgba(1,7,4,.78);
   backdrop-filter:blur(10px);
 }
 
-.modal{
+.modal-backdrop.show{
+  display:flex;
+}
+
+.feedback{
   width:min(500px,100%);
-  border:1px solid rgba(255,107,107,.27);
-  border-radius:22px;
+
   padding:28px;
-  background:
-    radial-gradient(circle at 50% 0,rgba(255,107,107,.08),transparent 45%),
-    #0b1511;
-  box-shadow:0 30px 90px rgba(0,0,0,.5);
-  animation:pop .25s ease both;
+
+  background:white;
+
+  border-radius:24px;
+
+  border:1px solid rgba(229,79,109,.15);
+
+  box-shadow:
+    0 30px 90px rgba(48,37,74,.22);
+
+  animation:pop .24s ease both;
 }
 
 @keyframes pop{
@@ -442,65 +874,141 @@ input[type=range]{
     opacity:0;
     transform:scale(.96) translateY(10px);
   }
+
   to{
     opacity:1;
     transform:none;
   }
 }
 
-.wrong-tag{
+.feedback-tag{
   display:inline-block;
+
+  margin-bottom:12px;
+  padding:6px 9px;
+
+  border-radius:999px;
+
+  background:var(--dangerBg);
+
   color:var(--danger);
-  font-size:10px;
-  font-weight:900;
-  letter-spacing:.18em;
-  margin-bottom:13px;
+
+  font-size:9px;
+  font-weight:950;
+  letter-spacing:.13em;
 }
 
-.modal h3{
+.feedback h3{
   margin:0;
-  font-size:28px;
+
+  font-size:27px;
+  line-height:1.05;
   letter-spacing:-.035em;
 }
 
-.modal p{
-  color:#b6c5be;
-  line-height:1.6;
-  margin:13px 0 8px;
+.feedback p{
+  margin:12px 0 0;
+
+  color:var(--muted);
+
+  line-height:1.55;
 }
 
-.hint{
-  margin:18px 0 23px;
+.feedback-clue{
+  margin:17px 0 21px;
   padding:13px 14px;
-  background:var(--danger-bg);
-  border-left:2px solid var(--danger);
-  color:#d9e4df;
-  font-size:13px;
+
+  background:#f8f5ff;
+
+  border-left:3px solid var(--purple);
+  border-radius:0 12px 12px 0;
+
+  color:#565d70;
+
+  font-size:12px;
   line-height:1.5;
 }
 
-.modal .primary{
+.feedback .primary{
   width:100%;
 }
 
+
+/* CORRECT FLASH */
+
+.correct-flash{
+  position:fixed;
+  z-index:110;
+
+  top:78px;
+  left:50%;
+
+  transform:translate(-50%,-15px);
+
+  padding:10px 15px;
+
+  color:#23300c;
+  background:var(--lime);
+
+  border-radius:999px;
+
+  box-shadow:0 10px 25px rgba(115,160,30,.18);
+
+  font-size:11px;
+  font-weight:950;
+
+  opacity:0;
+  pointer-events:none;
+
+  transition:.25s ease;
+}
+
+.correct-flash.show{
+  opacity:1;
+  transform:translate(-50%,0);
+}
+
+
+/* REVEAL */
+
 .reveal{
+  position:fixed;
+  z-index:120;
+
+  inset:0;
+
+  display:none;
+  align-items:center;
+  justify-content:center;
+
+  padding:20px;
+
   background:
-    radial-gradient(circle at 50% 45%,rgba(102,247,184,.17),transparent 30%),
-    rgba(3,10,7,.97);
+    radial-gradient(circle at 15% 15%,rgba(255,111,174,.22),transparent 27%),
+    radial-gradient(circle at 85% 20%,rgba(66,185,255,.24),transparent 30%),
+    radial-gradient(circle at 50% 90%,rgba(184,239,88,.21),transparent 29%),
+    #fffaf6;
+}
+
+.reveal.show{
+  display:flex;
 }
 
 .reveal-inner{
   width:min(760px,100%);
+
   text-align:center;
-  animation:revealIn .65s cubic-bezier(.2,.8,.2,1) both;
+
+  animation:revealIn .55s cubic-bezier(.2,.8,.2,1) both;
 }
 
 @keyframes revealIn{
   from{
     opacity:0;
-    transform:scale(.91);
-    filter:blur(6px);
+    transform:scale(.92);
+    filter:blur(5px);
   }
+
   to{
     opacity:1;
     transform:none;
@@ -508,55 +1016,86 @@ input[type=range]{
   }
 }
 
-.reveal-number{
-  margin:22px 0 8px;
-  font-size:clamp(64px,14vw,128px);
+.reveal-kicker{
+  color:var(--purple);
+
+  font-size:10px;
   font-weight:950;
-  letter-spacing:-.08em;
-  line-height:.9;
+  letter-spacing:.17em;
 }
 
-.reveal-number .old{
-  color:#56675f;
+.reveal-number{
+  margin:25px 0 7px;
+
+  font-size:clamp(63px,14vw,126px);
+  line-height:.9;
+  letter-spacing:-.08em;
+
+  font-weight:950;
+}
+
+.old{
+  color:#b6b3bf;
   text-decoration:line-through;
   text-decoration-thickness:4px;
 }
 
-.reveal-number .arrow{
-  color:#687a71;
-  padding:0 .1em;
+.arrow{
+  color:#9994a7;
+  padding:0 .08em;
 }
 
-.reveal-number .zero{
-  color:var(--green);
-  text-shadow:0 0 35px rgba(102,247,184,.3);
+.zero{
+  background:linear-gradient(
+    135deg,
+    var(--purple),
+    var(--pink)
+  );
+
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
 }
 
 .reveal-label{
-  color:#a9bdb4;
-  font-size:12px;
-  font-weight:800;
+  color:var(--muted);
+
+  font-size:10px;
+  font-weight:900;
   letter-spacing:.13em;
 }
 
-.eliminated{
+.overhang{
   display:inline-block;
-  margin:24px 0;
-  padding:10px 14px;
-  color:var(--green);
-  border:1px solid rgba(102,247,184,.25);
-  border-radius:100px;
-  font-size:11px;
-  font-weight:900;
-  letter-spacing:.14em;
+
+  margin:22px 0;
+
+  padding:9px 13px;
+
+  border-radius:999px;
+
+  background:rgba(184,239,88,.25);
+
+  border:1px solid rgba(130,180,40,.18);
+
+  color:#55721e;
+
+  font-size:10px;
+  font-weight:950;
+  letter-spacing:.12em;
 }
 
 .reveal-copy{
   max-width:570px;
-  margin:0 auto 26px;
-  color:#a8bbb2;
+  margin:0 auto 25px;
+
+  color:var(--muted);
+
   line-height:1.6;
 }
+
+
+/* RESULT */
 
 .result{
   max-width:760px;
@@ -570,65 +1109,127 @@ input[type=range]{
 .check{
   width:64px;
   height:64px;
-  margin:0 auto 18px;
-  border-radius:50%;
+
+  margin:0 auto 17px;
+
   display:grid;
   place-items:center;
-  color:#04100b;
-  background:var(--green);
+
+  border-radius:20px;
+
+  background:linear-gradient(
+    135deg,
+    var(--lime),
+    var(--mint)
+  );
+
+  color:#273516;
+
   font-size:29px;
   font-weight:950;
-  box-shadow:0 0 40px rgba(102,247,184,.2);
+
+  transform:rotate(-5deg);
+
+  box-shadow:
+    0 15px 30px rgba(90,170,90,.15);
 }
 
-.result-score{
-  color:var(--green);
-  font-size:clamp(50px,9vw,84px);
+.result h2{
+  margin:0;
+
+  font-size:clamp(36px,6vw,60px);
+  line-height:1;
+  letter-spacing:-.05em;
+}
+
+.score-big{
+  margin:14px 0 4px;
+
+  font-size:clamp(50px,9vw,82px);
   line-height:1;
   letter-spacing:-.06em;
+
   font-weight:950;
-  margin:14px 0 8px;
+
+  background:linear-gradient(
+    90deg,
+    var(--purple),
+    var(--pink)
+  );
+
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
 }
 
+.result-sub{
+  color:var(--muted);
+  font-size:13px;
+}
+
+
+/* PROOF CARD */
+
 .proof{
-  margin-top:30px;
-  border:1px solid rgba(102,247,184,.22);
-  border-radius:20px;
+  margin-top:28px;
+
   overflow:hidden;
-  background:linear-gradient(180deg,rgba(102,247,184,.045),rgba(255,255,255,.012));
+
+  background:white;
+
+  border:1px solid rgba(115,87,255,.12);
+  border-radius:22px;
+
+  box-shadow:var(--shadow);
 }
 
 .proof-head{
-  padding:18px 20px;
-  border-bottom:1px solid var(--line);
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap:15px;
+
+  padding:17px 19px;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(115,87,255,.07),
+      rgba(255,111,174,.06)
+    );
+
+  border-bottom:1px solid var(--line);
 }
 
 .proof-title{
-  color:var(--green);
-  font-size:11px;
-  font-weight:900;
-  letter-spacing:.17em;
+  color:var(--purple);
+
+  font-size:10px;
+  font-weight:950;
+  letter-spacing:.15em;
 }
 
-.live{
+.verified{
   display:flex;
   align-items:center;
   gap:7px;
-  color:#9ab0a5;
-  font-size:10px;
-  font-weight:800;
+
+  color:var(--muted);
+
+  font-size:9px;
+  font-weight:900;
 }
 
-.dot{
+.verified-dot{
   width:7px;
   height:7px;
+
   border-radius:50%;
-  background:var(--green);
-  box-shadow:0 0 12px var(--green);
+
+  background:var(--lime);
+
+  box-shadow:
+    0 0 0 4px rgba(184,239,88,.20);
 }
 
 .proof-grid{
@@ -637,7 +1238,8 @@ input[type=range]{
 }
 
 .proof-item{
-  padding:20px;
+  padding:19px;
+
   border-bottom:1px solid var(--line);
 }
 
@@ -647,44 +1249,59 @@ input[type=range]{
 
 .proof-item small{
   display:block;
+
+  margin-bottom:6px;
+
   color:var(--muted);
-  font-size:9px;
-  font-weight:900;
-  letter-spacing:.11em;
-  margin-bottom:7px;
+
+  font-size:8px;
+  font-weight:950;
+  letter-spacing:.1em;
 }
 
 .proof-item strong{
-  font-size:18px;
+  font-size:17px;
+}
+
+.zero-proof{
+  color:var(--purple);
 }
 
 .signature{
-  padding:19px 20px;
+  padding:17px 19px;
 }
 
 .signature small{
   display:block;
+
+  margin-bottom:7px;
+
   color:var(--muted);
-  font-size:9px;
-  font-weight:900;
-  letter-spacing:.11em;
-  margin-bottom:8px;
+
+  font-size:8px;
+  font-weight:950;
+  letter-spacing:.1em;
 }
 
 .signature code{
   display:block;
+
   overflow:hidden;
+
   white-space:nowrap;
   text-overflow:ellipsis;
-  color:#bdd0c7;
-  font-size:11px;
+
+  color:#626a7b;
+
+  font-size:10px;
 }
 
 .result-actions{
   display:grid;
   grid-template-columns:1.2fr .8fr;
   gap:11px;
-  margin-top:18px;
+
+  margin-top:17px;
 }
 
 .result-actions button{
@@ -692,27 +1309,41 @@ input[type=range]{
 }
 
 .truth{
-  margin-top:15px;
-  color:#70887d;
-  font-size:11px;
+  margin-top:13px;
+
   text-align:center;
+
+  color:#8a8f9d;
+
+  font-size:10px;
   line-height:1.5;
 }
+
+
+/* TOAST */
 
 .toast{
   position:fixed;
   z-index:200;
+
   left:50%;
   bottom:24px;
+
   transform:translate(-50%,20px);
-  padding:11px 15px;
-  background:#eafff5;
-  color:#06110c;
-  border-radius:100px;
-  font-size:12px;
+
+  padding:10px 15px;
+
+  border-radius:999px;
+
+  background:#202233;
+  color:white;
+
+  font-size:11px;
   font-weight:900;
+
   opacity:0;
   pointer-events:none;
+
   transition:.25s ease;
 }
 
@@ -721,27 +1352,26 @@ input[type=range]{
   transform:translate(-50%,0);
 }
 
-.shake{
-  animation:shake .3s ease;
-}
 
-@keyframes shake{
-  0%,100%{transform:translateX(0)}
-  25%{transform:translateX(-7px)}
-  75%{transform:translateX(7px)}
-}
+/* MOBILE */
 
-@media(max-width:680px){
+@media(max-width:700px){
+
   .screen{
-    padding-top:88px;
+    padding-top:84px;
   }
 
-  .stats{
-    grid-template-columns:1fr 1fr 1fr;
+  .brand{
+    font-size:10px;
   }
 
-  .stat strong{
-    font-size:16px;
+  .hud{
+    gap:7px;
+    font-size:9px;
+  }
+
+  .quick-stat strong{
+    font-size:15px;
   }
 
   .options{
@@ -772,265 +1402,490 @@ input[type=range]{
     grid-template-columns:1fr;
   }
 
-  .score{
-    gap:8px;
-    font-size:10px;
+  .console-row{
+    grid-template-columns:1fr;
+    gap:4px;
   }
 
-  .brand{
-    font-size:11px;
+  .console-row strong{
+    text-align:left;
+  }
+
+  .reveal-number{
+    font-size:clamp(52px,16vw,90px);
   }
 }
 </style>
 </head>
 
+
 <body>
 
 <header class="topbar">
+
   <div class="wrap topbar-inner">
-    <div class="brand">$STREAM · BURN CHALLENGE</div>
 
-    <div class="score">
-      <span>XP <strong id="xp">0</strong>/900</span>
-      <span>STREAK <strong id="streak">0×</strong></span>
+    <div class="brand">
+      $STREAM · POINT OF NO RETURN
     </div>
+
+    <div class="hud">
+      <span>
+        XP <strong id="xp">0</strong>/900
+      </span>
+
+      <span>
+        STREAK <strong id="streak">0×</strong>
+      </span>
+    </div>
+
   </div>
 
-  <div class="progress">
-    <span id="progress"></span>
+  <div class="progress-track">
+    <div class="progress-fill" id="progress"></div>
   </div>
+
 </header>
 
 
 <!-- HERO -->
 
 <section class="screen active" id="hero">
+
   <div class="wrap hero">
 
-    <div class="eyebrow">$STREAM · ON-CHAIN CHALLENGE</div>
+    <div class="badge">
+      <span class="badge-dot"></span>
+      ON-CHAIN INVESTIGATION
+    </div>
 
     <h1>
       1 BILLION<br>
-      <span class="highlight">$STREAM</span> EXISTED.
+      <span class="gradient-text">$STREAM</span>
+      EXISTED.
     </h1>
 
-    <p class="lead">
-      Where did 700M go? Three decisions.
-      One irreversible event. Trace the historic supply burn
-      and uncover the number most people miss.
+    <p class="hero-copy">
+      Then <strong>699.99M moved beyond recovery.</strong>
+      You have three decisions to reconstruct what happened —
+      then verify the evidence yourself.
     </p>
 
-    <div class="stats">
-      <div class="stat">
+    <div class="quick-stats">
+
+      <div class="quick-stat">
         <strong>3</strong>
         <span>DECISIONS</span>
       </div>
 
-      <div class="stat">
-        <strong>900</strong>
-        <span>MAX XP</span>
+      <div class="quick-stat">
+        <strong>~25s</strong>
+        <span>INVESTIGATION</span>
       </div>
 
-      <div class="stat">
-        <strong>~25s</strong>
-        <span>TO SOLVE</span>
+      <div class="quick-stat">
+        <strong>1 TX</strong>
+        <span>FINAL PROOF</span>
       </div>
+
     </div>
 
     <button class="primary" onclick="startGame()">
-      START INVESTIGATION →
+      OPEN THE CASE →
     </button>
 
   </div>
+
 </section>
 
 
 <!-- MISSION 1 -->
 
 <section class="screen" id="mission1">
+
   <div class="wrap mission">
 
-    <div class="mission-head">
-      <div class="mission-no">01 / SUPPLY SHOCK</div>
+    <button
+      class="back-btn"
+      onclick="goBack('hero')"
+    >
+      ← BACK
+    </button>
 
-      <h2>How deep was the burn?</h2>
-
-      <div class="question">
-        Start with 1 billion $STREAM.
-        Reconstruct the published burn percentage.
-      </div>
+    <div class="mission-label">
+      01 / RECONSTRUCT THE SUPPLY
     </div>
 
-    <div class="data-card">
+    <h2>
+      How deep was the burn?
+    </h2>
+
+    <div class="question">
+      Start with the original 1B supply.
+      Adjust the burn until the remaining supply matches
+      the published post-burn state.
+    </div>
+
+    <div class="evidence-strip">
+
+      <div class="evidence-icon">
+        ◎
+      </div>
+
+      <div>
+        <small>EVIDENCE CLUE</small>
+        <strong>
+          Published post-burn supply: approximately 300M $STREAM
+        </strong>
+      </div>
+
+    </div>
+
+
+    <div class="card">
 
       <div class="data-row">
         <span>ORIGINAL SUPPLY</span>
         <strong>1,000,000,000</strong>
       </div>
 
-      <div class="slider-zone">
+      <div class="big-number">
+        <span id="burnValue">50</span><small>%</small>
+      </div>
 
-        <div class="big-percent">
-          <span id="burnValue">50</span><small>%</small>
-        </div>
+      <input
+        class="slider"
+        id="burnSlider"
+        type="range"
+        min="0"
+        max="100"
+        value="50"
+        oninput="updateBurn()"
+      >
 
-        <input
-          id="burnSlider"
-          type="range"
-          min="0"
-          max="100"
-          value="50"
-          oninput="updateBurn()"
-        >
+      <div class="supply-track">
+        <div
+          class="supply-fill"
+          id="supplyFill"
+        ></div>
+      </div>
 
-        <div class="supply-bar">
-          <div class="supply-burn" id="supplyBurn"></div>
-        </div>
+      <div class="supply-meta">
 
-        <div class="supply-numbers">
-          <span>
-            BURNED
-            <strong id="burnedAmount">500M</strong>
-          </span>
+        <span>
+          BURNED
+          <strong id="burnedAmount">
+            500M
+          </strong>
+        </span>
 
-          <span>
-            REMAINING
-            <strong id="remainingAmount">500M</strong>
-          </span>
-        </div>
+        <span>
+          REMAINING
+          <strong id="remainingAmount">
+            500M
+          </strong>
+        </span>
 
       </div>
+
     </div>
 
-    <div class="action">
-      <button class="primary" onclick="lockBurn()">
-        LOCK ANSWER
+    <div class="action center">
+
+      <button
+        class="primary"
+        onclick="lockBurn()"
+      >
+        LOCK EVIDENCE →
       </button>
-    </div>
 
-    <div class="micro">
-      No guessing penalty. Read the supply.
     </div>
 
   </div>
+
 </section>
 
 
 <!-- MISSION 2 -->
 
 <section class="screen" id="mission2">
+
   <div class="wrap mission">
 
-    <div class="mission-head">
+    <button
+      class="back-btn"
+      onclick="goBack('mission1')"
+    >
+      ← PREVIOUS EVIDENCE
+    </button>
 
-      <div class="mission-no">02 / MECHANISM</div>
+    <div class="mission-label">
+      02 / IDENTIFY THE MECHANISM
+    </div>
 
-      <h2>What actually happened?</h2>
+    <h2>
+      Gone, or just unavailable?
+    </h2>
 
-      <div class="question">
-        699.99M $STREAM left the supply story.
-        Identify the mechanism.
+    <div class="question">
+      The distinction matters.
+      Which mechanism makes the supply reduction irreversible?
+    </div>
+
+    <div class="evidence-strip">
+
+      <div class="evidence-icon">
+        ↯
+      </div>
+
+      <div>
+        <small>EVIDENCE CLUE</small>
+        <strong>
+          No unlock date · no recovery path · no future reissue
+        </strong>
       </div>
 
     </div>
 
+
     <div class="options">
 
-      <button class="option" onclick="mechanism('locked')">
-        <strong>LOCKED</strong>
-        <span>
-          Tokens still exist but cannot move temporarily.
+      <button
+        class="option"
+        onclick="mechanism('locked')"
+      >
+
+        <span class="option-tag">
+          TEMPORARY
         </span>
+
+        <strong>
+          LOCKED
+        </strong>
+
+        <p>
+          Tokens still exist but cannot move
+          for a period of time.
+        </p>
+
       </button>
 
-      <button class="option" onclick="mechanism('vested')">
-        <strong>VESTED</strong>
-        <span>
-          Tokens still exist and unlock according to a future schedule.
+
+      <button
+        class="option"
+        onclick="mechanism('vested')"
+      >
+
+        <span class="option-tag">
+          SCHEDULED
         </span>
+
+        <strong>
+          VESTED
+        </strong>
+
+        <p>
+          Tokens still exist and become available
+          according to an unlock schedule.
+        </p>
+
       </button>
 
-      <button class="option" onclick="mechanism('burned')">
-        <strong>BURNED</strong>
-        <span>
-          Tokens are permanently removed from supply.
+
+      <button
+        class="option"
+        onclick="mechanism('burned')"
+      >
+
+        <span class="option-tag">
+          IRREVERSIBLE
         </span>
+
+        <strong>
+          BURNED
+        </strong>
+
+        <p>
+          Tokens are permanently removed
+          from the supply.
+        </p>
+
       </button>
 
     </div>
 
   </div>
+
 </section>
 
 
 <!-- MISSION 3 -->
 
 <section class="screen" id="mission3">
+
   <div class="wrap mission">
 
-    <div class="mission-head">
+    <button
+      class="back-btn"
+      onclick="goBack('mission2')"
+    >
+      ← PREVIOUS EVIDENCE
+    </button>
 
-      <div class="mission-no">FINAL / THE NUMBER PEOPLE MISS</div>
+    <div class="mission-label">
+      FINAL / READ THE EVIDENCE
+    </div>
 
-      <h2>What remained?</h2>
+    <h2>
+      What number closes the case?
+    </h2>
 
-      <div class="question">
-        Everyone sees the ~70% burn.
-        One number tells the deeper story:
-        the Foundation's $STREAM balance after burning its entire holding.
+    <div class="question">
+      Don't guess.
+      Read the evidence card and determine what remained
+      in the Foundation's $STREAM holding after the burn.
+    </div>
+
+
+    <div class="evidence-console">
+
+      <div class="console-top">
+
+        <div class="console-dots">
+          <span class="console-dot"></span>
+          <span class="console-dot"></span>
+          <span class="console-dot"></span>
+        </div>
+
+        <span>
+          ON-CHAIN CASE FILE
+        </span>
+
+      </div>
+
+
+      <div class="console-body">
+
+        <div class="console-row">
+          <span>Original total supply</span>
+          <strong>1,000,000,000</strong>
+        </div>
+
+        <div class="console-row">
+          <span>Published burn</span>
+          <strong class="hot">
+            699.99M $STREAM
+          </strong>
+        </div>
+
+        <div class="console-row">
+          <span>Execution</span>
+          <strong>
+            SINGLE TRANSACTION
+          </strong>
+        </div>
+
+        <div class="console-row">
+          <span>Mechanism</span>
+          <strong class="good">
+            PERMANENT BURN
+          </strong>
+        </div>
+
+        <div class="console-row">
+          <span>Foundation action</span>
+          <strong>
+            ENTIRE HOLDING BURNED
+          </strong>
+        </div>
+
+        <div class="clue">
+          <strong>Inference:</strong>
+          if the Foundation burned its entire holding,
+          what balance could remain under Foundation control?
+        </div>
+
       </div>
 
     </div>
 
+
     <div class="options final-options">
 
-      <button class="option" onclick="finalAnswer('699.99M')">
+      <button
+        class="option"
+        onclick="finalAnswer('699.99M')"
+      >
         <strong>699.99M</strong>
-        <span>$STREAM</span>
+        <p>BURN AMOUNT</p>
       </button>
 
-      <button class="option" onclick="finalAnswer('300M')">
+      <button
+        class="option"
+        onclick="finalAnswer('300M')"
+      >
         <strong>300M</strong>
-        <span>$STREAM</span>
+        <p>TOTAL SUPPLY</p>
       </button>
 
-      <button class="option" onclick="finalAnswer('70%')">
+      <button
+        class="option"
+        onclick="finalAnswer('70%')"
+      >
         <strong>70%</strong>
-        <span>OF SUPPLY</span>
+        <p>BURN RATIO</p>
       </button>
 
-      <button class="option" onclick="finalAnswer('0')">
+      <button
+        class="option"
+        onclick="finalAnswer('0')"
+      >
         <strong>0</strong>
-        <span>$STREAM</span>
+        <p>FOUNDATION BALANCE</p>
       </button>
 
     </div>
 
   </div>
+
 </section>
 
 
 <!-- RESULT -->
 
 <section class="screen" id="result">
+
   <div class="wrap result">
+
+    <button
+      class="back-btn"
+      onclick="goBack('mission3')"
+    >
+      ← REVIEW CASE
+    </button>
+
 
     <div class="result-top">
 
-      <div class="check">✓</div>
-
-      <div class="eyebrow">
-        CHALLENGE COMPLETE
+      <div class="check">
+        ✓
       </div>
 
-      <h2>ON-CHAIN DETECTIVE</h2>
+      <div class="mission-label">
+        CASE CLOSED
+      </div>
 
-      <div class="result-score">
+      <h2>
+        YOU FOLLOWED<br>
+        THE EVIDENCE.
+      </h2>
+
+      <div class="score-big">
         900/900
       </div>
 
-      <div class="question" style="margin-left:auto;margin-right:auto">
-        3/3 missions solved · Perfect investigation
+      <div class="result-sub">
+        3 decisions · 1 irreversible event · 1 verifiable transaction
       </div>
 
     </div>
@@ -1041,12 +1896,12 @@ input[type=range]{
       <div class="proof-head">
 
         <div class="proof-title">
-          FINAL PROOF · SOLANA
+          FINAL PROOF · SOLANA MAINNET
         </div>
 
-        <div class="live">
-          <span class="dot"></span>
-          ON-CHAIN EVIDENCE
+        <div class="verified">
+          <span class="verified-dot"></span>
+          VERIFY YOURSELF
         </div>
 
       </div>
@@ -1055,23 +1910,31 @@ input[type=range]{
       <div class="proof-grid">
 
         <div class="proof-item">
-          <small>PUBLISHED BURN AMOUNT</small>
-          <strong>699.99M $STREAM</strong>
+          <small>PUBLISHED BURN</small>
+          <strong>
+            699.99M $STREAM
+          </strong>
         </div>
 
         <div class="proof-item">
           <small>EXECUTION</small>
-          <strong>Single Transaction</strong>
+          <strong>
+            Single Transaction
+          </strong>
         </div>
 
         <div class="proof-item">
           <small>MECHANISM</small>
-          <strong>Permanent Burn</strong>
+          <strong>
+            Permanent Burn
+          </strong>
         </div>
 
         <div class="proof-item">
           <small>FOUNDATION HOLDING AFTER BURN</small>
-          <strong class="highlight">0 $STREAM</strong>
+          <strong class="zero-proof">
+            0 $STREAM
+          </strong>
         </div>
 
       </div>
@@ -1079,7 +1942,9 @@ input[type=range]{
 
       <div class="signature">
 
-        <small>TRANSACTION SIGNATURE</small>
+        <small>
+          TRANSACTION SIGNATURE
+        </small>
 
         <code>
           4rbViHbmCV35ttMngeC8KBULCMctD7X8mNg3RxfvGwPKyPi7hX8VKpjyJ81AnYuVzzXEsWuNuppcpDY47hnchZNv
@@ -1092,87 +1957,126 @@ input[type=range]{
 
     <div class="result-actions">
 
-      <button class="primary" onclick="verifyOnChain()">
+      <button
+        class="primary"
+        onclick="verifyOnChain()"
+      >
         VERIFY ON SOLSCAN ↗
       </button>
 
-      <button class="secondary" onclick="shareResult()">
+      <button
+        class="secondary"
+        onclick="shareResult()"
+      >
         SHARE 900/900
       </button>
 
     </div>
 
     <div class="truth">
-      Don't trust the game. Verify the burn on-chain.
+      Evidence first. The on-chain transaction is the source of truth.
     </div>
 
   </div>
+
 </section>
 
 
 <!-- WRONG ANSWER MODAL -->
 
-<div class="modal-backdrop" id="wrongModal">
+<div
+  class="modal-backdrop"
+  id="wrongModal"
+>
 
-  <div class="modal" id="modalCard">
+  <div class="feedback">
 
-    <div class="wrong-tag">
-      EVIDENCE DOESN'T MATCH
+    <div class="feedback-tag">
+      EVIDENCE CHECK
     </div>
 
     <h3 id="wrongTitle">
-      TRY AGAIN.
+      CHECK THE CLUE.
     </h3>
 
     <p id="wrongCopy"></p>
 
-    <div class="hint" id="wrongHint"></div>
+    <div
+      class="feedback-clue"
+      id="wrongClue"
+    ></div>
 
-    <button class="primary" onclick="closeWrong()">
-      ADJUST & TRY AGAIN →
+    <button
+      class="primary"
+      onclick="closeWrong()"
+    >
+      USE THE EVIDENCE → TRY AGAIN
     </button>
 
   </div>
 
+</div>
+
+
+<!-- CORRECT FLASH -->
+
+<div
+  class="correct-flash"
+  id="correctFlash"
+>
+  +300 XP · EVIDENCE MATCHED ✓
 </div>
 
 
 <!-- CINEMATIC REVEAL -->
 
-<div class="reveal" id="reveal">
+<div
+  class="reveal"
+  id="reveal"
+>
 
   <div class="reveal-inner">
 
-    <div class="eyebrow">
+    <div class="reveal-kicker">
       FINAL FINDING · FOUNDATION HOLDING
     </div>
 
     <div class="reveal-number">
 
-      <span class="old">699.99M</span>
+      <span class="old">
+        699.99M
+      </span>
 
-      <span class="arrow">→</span>
+      <span class="arrow">
+        →
+      </span>
 
-      <span class="zero">0</span>
+      <span class="zero">
+        0
+      </span>
 
     </div>
 
     <div class="reveal-label">
-      $STREAM CONTROLLED BY THE FOUNDATION
+      $STREAM IN THE FOUNDATION HOLDING
     </div>
 
-    <div class="eliminated">
-      SUPPLY OVERHANG: ELIMINATED
+    <div class="overhang">
+      FOUNDATION SUPPLY OVERHANG: ELIMINATED
     </div>
 
     <p class="reveal-copy">
       The Foundation reported burning its entire $STREAM holding
       in one irreversible Solana transaction.
-      No lock. No vesting schedule. No future treasury unlock.
+      You solved the story.
+      Now verify the evidence.
     </p>
 
-    <button class="primary" onclick="continueToProof()">
-      CONTINUE TO FINAL PROOF →
+    <button
+      class="primary"
+      onclick="continueToProof()"
+    >
+      OPEN FINAL PROOF →
     </button>
 
   </div>
@@ -1180,19 +2084,28 @@ input[type=range]{
 </div>
 
 
-<div class="toast" id="toast">
+<div
+  class="toast"
+  id="toast"
+>
   Result copied ✓
 </div>
 
 
 <script>
 
+const TX =
+  "https://solscan.io/tx/4rbViHbmCV35ttMngeC8KBULCMctD7X8mNg3RxfvGwPKyPi7hX8VKpjyJ81AnYuVzzXEsWuNuppcpDY47hnchZNv?cluster=";
+
+
 let xp = 0;
 let streak = 0;
-let mission = 0;
 
-const TX =
-"https://solscan.io/tx/4rbViHbmCV35ttMngeC8KBULCMctD7X8mNg3RxfvGwPKyPi7hX8VKpjyJ81AnYuVzzXEsWuNuppcpDY47hnchZNv?cluster=";
+let solved = {
+  mission1:false,
+  mission2:false,
+  mission3:false
+};
 
 
 function showScreen(id){
@@ -1203,9 +2116,12 @@ function showScreen(id){
       screen.classList.remove("active");
     });
 
-  const target = document.getElementById(id);
+  const target =
+    document.getElementById(id);
 
   target.classList.add("active");
+
+  updateHUD(id);
 
   window.scrollTo({
     top:0,
@@ -1215,34 +2131,61 @@ function showScreen(id){
 }
 
 
-function updateHUD(){
-
-  document.getElementById("xp").textContent = xp;
-
-  document.getElementById("streak").textContent =
-    streak + "×";
-
-  document.getElementById("progress").style.width =
-    (mission / 3 * 100) + "%";
-
-}
-
-
 function startGame(){
-
-  mission = 0;
-
-  updateHUD();
 
   showScreen("mission1");
 
 }
 
 
+function goBack(target){
+
+  showScreen(target);
+
+}
+
+
+function updateHUD(screenId){
+
+  document.getElementById("xp").textContent =
+    xp;
+
+  document.getElementById("streak").textContent =
+    streak + "×";
+
+
+  let progress = 0;
+
+  if(screenId === "mission1"){
+    progress = 10;
+  }
+
+  if(screenId === "mission2"){
+    progress = 36;
+  }
+
+  if(screenId === "mission3"){
+    progress = 68;
+  }
+
+  if(screenId === "result"){
+    progress = 100;
+  }
+
+
+  document.getElementById("progress").style.width =
+    progress + "%";
+
+}
+
+
 function updateBurn(){
 
+  const slider =
+    document.getElementById("burnSlider");
+
   const value =
-    Number(document.getElementById("burnSlider").value);
+    Number(slider.value);
 
   const burned =
     value * 10;
@@ -1250,22 +2193,23 @@ function updateBurn(){
   const remaining =
     1000 - burned;
 
+
   document.getElementById("burnValue").textContent =
     value;
 
-  document.getElementById("supplyBurn").style.width =
+  document.getElementById("supplyFill").style.width =
     value + "%";
 
   document.getElementById("burnedAmount").textContent =
-    formatM(burned);
+    formatMillions(burned);
 
   document.getElementById("remainingAmount").textContent =
-    formatM(remaining);
+    formatMillions(remaining);
 
 }
 
 
-function formatM(value){
+function formatMillions(value){
 
   if(value === 1000){
     return "1B";
@@ -1276,77 +2220,113 @@ function formatM(value){
 }
 
 
+function awardMission(key){
+
+  if(!solved[key]){
+
+    solved[key] = true;
+
+    xp += 300;
+    streak += 1;
+
+    showCorrect();
+
+  }
+
+}
+
+
+function showCorrect(){
+
+  const flash =
+    document.getElementById("correctFlash");
+
+  flash.classList.add("show");
+
+  setTimeout(()=>{
+    flash.classList.remove("show");
+  },900);
+
+}
+
+
 function lockBurn(){
 
   const value =
-    Number(document.getElementById("burnSlider").value);
+    Number(
+      document.getElementById("burnSlider").value
+    );
+
 
   if(value === 70){
 
-    award();
+    awardMission("mission1");
 
-    mission = 1;
-
-    updateHUD();
+    updateHUD("mission1");
 
     setTimeout(()=>{
       showScreen("mission2");
-    },250);
+    },650);
 
     return;
 
   }
 
-  let title;
-  let copy;
-  let hint;
+
+  let title = "";
+  let copy = "";
+  let clue = "";
 
 
   if(value === 69){
 
-    title = "SO CLOSE.";
+    title =
+      "SO CLOSE.";
 
     copy =
-      "At 69%, about 310M $STREAM would remain.";
+      "A 69% model leaves about 310M $STREAM.";
 
-    hint =
-      "Only 10M separates this model from the published ~300M post-burn supply.";
+    clue =
+      "The published post-burn supply is approximately 300M. Move the burn just one point deeper.";
 
   }
 
   else if(value === 71){
 
-    title = "OVERSHOT.";
+    title =
+      "YOU WENT TOO FAR.";
 
     copy =
-      "At 71%, only about 290M $STREAM would remain.";
+      "A 71% model leaves only about 290M $STREAM.";
 
-    hint =
-      "Bring roughly 10M back into the remaining supply.";
+    clue =
+      "The evidence points to approximately 300M remaining. Bring 10M back.";
 
   }
 
   else if(value === 100){
 
-    title = "TOTAL EXTINCTION? NOT QUITE.";
+    title =
+      "THAT WOULD ERASE EVERYTHING.";
 
     copy =
-      "A 100% burn would leave no $STREAM supply at all.";
+      "A 100% burn leaves no $STREAM supply at all.";
 
-    hint =
-      "The historic event was massive, but roughly 300M remained in total supply.";
+    clue =
+      "The event was massive, but the network still had approximately 300M total supply afterward.";
 
   }
 
   else if(value === 0){
 
-    title = "NOTHING BURNED?";
+    title =
+      "THE SUPPLY DID CHANGE.";
 
     copy =
-      "That would leave the original 1B supply untouched.";
+      "A 0% burn would leave the full original 1B untouched.";
 
-    hint =
-      "The published event removed roughly seven out of every ten tokens from the original supply.";
+    clue =
+      "Use the evidence: approximately 300M remained after the event.";
 
   }
 
@@ -1356,13 +2336,13 @@ function lockBurn(){
       1000 - value * 10;
 
     title =
-      remaining + "M WOULD STILL REMAIN.";
+      remaining + "M WOULD REMAIN.";
 
     copy =
-      "That leaves too much of the original 1B supply.";
+      "That leaves too much of the original supply.";
 
-    hint =
-      "The real burn went deeper: post-burn supply was roughly 300M.";
+    clue =
+      "Your target is approximately 300M remaining. Increase the burn.";
 
   }
 
@@ -1377,13 +2357,17 @@ function lockBurn(){
     copy =
       "That removes more supply than the published event.";
 
-    hint =
-      "The target leaves roughly 300M from the original 1B.";
+    clue =
+      "Your target is approximately 300M remaining. Reduce the burn.";
 
   }
 
 
-  wrong(title,copy,hint);
+  wrong(
+    title,
+    copy,
+    clue
+  );
 
 }
 
@@ -1392,15 +2376,13 @@ function mechanism(answer){
 
   if(answer === "burned"){
 
-    award();
+    awardMission("mission2");
 
-    mission = 2;
-
-    updateHUD();
+    updateHUD("mission2");
 
     setTimeout(()=>{
       showScreen("mission3");
-    },250);
+    },650);
 
     return;
 
@@ -1410,9 +2392,9 @@ function mechanism(answer){
   if(answer === "locked"){
 
     wrong(
-      "STILL EXISTS.",
-      "Locked tokens remain part of the supply. A lock only prevents movement for a period of time.",
-      "A lock can end. The Foundation event permanently removed the tokens."
+      "LOCKED ≠ GONE.",
+      "Locked tokens still exist. The restriction can end and the tokens can become movable again.",
+      "The evidence says there is no recovery path and no future unlock. Look for the irreversible mechanism."
     );
 
     return;
@@ -1420,11 +2402,15 @@ function mechanism(answer){
   }
 
 
-  wrong(
-    "NOT GONE — JUST WAITING.",
-    "Vested tokens still exist. They become available according to an unlock schedule.",
-    "The burn had no future unlock date and no recovery path."
-  );
+  if(answer === "vested"){
+
+    wrong(
+      "NOT GONE — JUST WAITING.",
+      "Vested tokens still exist and become available according to a future schedule.",
+      "This event has no unlock date. The tokens were permanently removed from supply."
+    );
+
+  }
 
 }
 
@@ -1433,17 +2419,17 @@ function finalAnswer(answer){
 
   if(answer === "0"){
 
-    award();
+    awardMission("mission3");
 
-    mission = 3;
-
-    updateHUD();
+    updateHUD("mission3");
 
     setTimeout(()=>{
+
       document
         .getElementById("reveal")
         .classList.add("show");
-    },250);
+
+    },650);
 
     return;
 
@@ -1453,9 +2439,9 @@ function finalAnswer(answer){
   if(answer === "699.99M"){
 
     wrong(
-      "THAT'S WHAT DISAPPEARED.",
-      "699.99M $STREAM is the published burn amount — not the Foundation's remaining holding.",
-      "Follow the tokens after the burn, not before it."
+      "THAT'S THE BURN AMOUNT.",
+      "699.99M $STREAM describes what was removed, not what remained in the Foundation holding.",
+      "Read the last evidence line: the Foundation burned its entire holding."
     );
 
     return;
@@ -1467,8 +2453,8 @@ function finalAnswer(answer){
 
     wrong(
       "NETWORK SUPPLY ≠ FOUNDATION HOLDING.",
-      "300M is the reported total post-burn $STREAM supply across the network.",
-      "The question asks what remained under Foundation control."
+      "Approximately 300M describes the total post-burn network supply.",
+      "The question asks for the Foundation's own remaining $STREAM balance."
     );
 
     return;
@@ -1476,31 +2462,25 @@ function finalAnswer(answer){
   }
 
 
-  wrong(
-    "THAT'S A PERCENTAGE.",
-    "~70% describes the share of the original supply that was burned.",
-    "We're looking for a token balance, not the burn ratio."
-  );
+  if(answer === "70%"){
+
+    wrong(
+      "PERCENTAGE ≠ BALANCE.",
+      "Approximately 70% describes the share of original supply removed.",
+      "You need a token balance. If the entire Foundation holding was burned, what remained?"
+    );
+
+  }
 
 }
 
 
-function award(){
-
-  xp += 300;
-
-  streak += 1;
-
-  updateHUD();
-
-}
-
-
-function wrong(title,copy,hint){
+function wrong(title,copy,clue){
 
   streak = 0;
 
-  updateHUD();
+  document.getElementById("streak").textContent =
+    "0×";
 
   document.getElementById("wrongTitle").textContent =
     title;
@@ -1508,22 +2488,12 @@ function wrong(title,copy,hint){
   document.getElementById("wrongCopy").textContent =
     copy;
 
-  document.getElementById("wrongHint").textContent =
-    hint;
+  document.getElementById("wrongClue").textContent =
+    clue;
 
-  const modal =
-    document.getElementById("wrongModal");
-
-  const card =
-    document.getElementById("modalCard");
-
-  modal.classList.add("show");
-
-  card.classList.remove("shake");
-
-  void card.offsetWidth;
-
-  card.classList.add("shake");
+  document
+    .getElementById("wrongModal")
+    .classList.add("show");
 
 }
 
@@ -1562,21 +2532,27 @@ function verifyOnChain(){
 async function shareResult(){
 
   const text =
-    "I scored 900/900 on the $STREAM Burn Challenge — tracing 1B supply → ~70% burned → 0 $STREAM left in the Foundation holding after it burned its entire position.\n\nDon't trust the score. Verify the burn on-chain:\n" +
+    "I scored 900/900 on the $STREAM Point of No Return challenge.\n\n" +
+    "1B supply → 699.99M burned → 0 $STREAM left in the Foundation holding after it burned its entire position.\n\n" +
+    "Don't trust the score. Verify the burn on-chain:\n" +
     TX;
+
 
   if(navigator.share){
 
     try{
 
       await navigator.share({
-        title:"$STREAM Burn Challenge",
+        title:
+          "$STREAM — Point of No Return",
+
         text:text
       });
 
       return;
 
     }
+
     catch(error){
 
       if(error.name === "AbortError"){
@@ -1595,12 +2571,14 @@ async function shareResult(){
     showToast("Result copied ✓");
 
   }
+
   catch(error){
 
     const area =
       document.createElement("textarea");
 
-    area.value = text;
+    area.value =
+      text;
 
     document.body.appendChild(area);
 
@@ -1628,7 +2606,9 @@ function showToast(message){
   toast.classList.add("show");
 
   setTimeout(()=>{
+
     toast.classList.remove("show");
+
   },1800);
 
 }
@@ -1645,17 +2625,20 @@ document
   });
 
 
-document.addEventListener("keydown",event=>{
+document.addEventListener(
+  "keydown",
+  event=>{
 
-  if(event.key === "Escape"){
-    closeWrong();
+    if(event.key === "Escape"){
+      closeWrong();
+    }
+
   }
-
-});
+);
 
 
 updateBurn();
-updateHUD();
+updateHUD("hero");
 
 </script>
 
